@@ -1,0 +1,164 @@
+generated: '2026-09-19'
+method: derived
+source: >-
+  json-schema/aircover-pipeline-*.json (Aircover's own published draft-2020-12 schemas from
+  github.com/Aircover/aircover-pipeline) + the documented MCP tool arguments in mcp/aircover-mcp.yml, whose
+  evidence is the provider's open-source Agent Skills. NOT derived from openapi/aircover-openapi.yml — that
+  contract models only OAuth and the JSON-RPC transport and contains no domain entities.
+confidence: medium
+caveat: >-
+  Aircover publishes no object reference and no schema for the MCP tool responses. The entities and fields
+  below are the ones its own published artifacts name; field lists are partial by construction and types are
+  only asserted where a JSON Schema states them. Nothing here is inferred from a response body, because the
+  live surface is auth-gated.
+entities:
+- name: Meeting
+  id_field: id
+  id_shape: 32-character opaque string (the skills insist on the "full 32-char id")
+  fields:
+  - name: id
+    type: string
+    source: json-schema/aircover-pipeline-meetings-1.0.json
+  - name: deal_id
+    type: string
+    note: "In the pipeline schema this field carries the COMPOSITE '<prospect-domain>/<deal-id>'; empty string when the meeting has no linked Salesforce deal. The MCP tools call that composite deal_key and reserve deal_id for the bare integer."
+    source: json-schema/aircover-pipeline-meetings-1.0.json
+  - name: team_ids
+    type: string (comma-separated)
+    source: json-schema/aircover-pipeline-meetings-1.0.json
+  - name: date
+    type: string (YYYY-MM-DD)
+    source: json-schema/aircover-pipeline-meetings-1.0.json
+  - name: notes_sent_to
+    type: string (comma-separated emails of the deal team)
+    source: json-schema/aircover-pipeline-meetings-1.0.json
+  - name: prospect_org
+    type: string
+    source: mcp tool responses (aircover-skills)
+  - name: start_time
+    type: string (ISO timestamp)
+    source: mcp tool responses (aircover-skills)
+  - name: deal_team
+    type: array
+    source: get_meeting (aircover-skills)
+  - name: prospect_attendees
+    type: array
+    source: get_meeting (aircover-skills)
+  - name: notes
+    type: object (AI summary)
+    source: get_meeting (aircover-skills)
+  read_by: [list_meetings, get_meeting]
+- name: Transcript
+  id_field: meeting_id
+  fields: []
+  note: Fetched whole by get_meeting_transcript(meeting_id); no published shape. Meetings without a transcript exist and cause agent_results to error.
+  read_by: [get_meeting_transcript]
+- name: Deal
+  id_field: deal_key
+  id_shape: '"<prospect_org>/<deal_id>" — the skills state the bare integer deal_id "resets" and must never be used alone'
+  fields:
+  - name: prospect_org
+    type: string
+  - name: deal_id
+    type: integer
+  - name: deal_key
+    type: string
+  - name: nextMeetingDate
+    type: date
+    source: get_deals (aircover-skills)
+  - name: crm
+    type: object
+    note: Mirrors Salesforce and HubSpot fields — sfdc_opportunity_name, sfdc_opportunity_id, amount, close date, stage. An empty crm block is a placeholder, not an error.
+    source: get_deal (aircover-skills)
+  - name: completed_meetings
+    type: array of Meeting
+    source: get_deal (aircover-skills)
+  read_by: [get_deals, get_deal]
+- name: Agent
+  id_field: id
+  alias: template
+  fields:
+  - name: id
+    type: string
+    note: Passed as template_id to agent_results and get_qualification_results.
+  - name: name
+    type: string
+  - name: category
+    type: string
+    note: 'e.g. "qualification"'
+  types:
+  - Extraction agents (MaxScore = 0) — pull structured data, no scoring
+  - Scoring agents (MaxScore > 0) — evaluate against MEDDPICC, BANT, SPIN, Sandler and others
+  - Hybrid agents — extraction plus a summarizing property
+  - Dispatch agents — weekly report data and customer summaries
+  source: https://www.aircover.ai/llms.txt
+  read_by: [list_agents]
+- name: AgentResult
+  id_field: (meeting_id, template_id)
+  fields:
+  - name: meeting_id
+    type: string
+    source: json-schema/aircover-pipeline-agent-output-1.0.json
+  - name: deal_id
+    type: string
+    source: json-schema/aircover-pipeline-agent-output-1.0.json
+  - name: date
+    type: string
+    source: json-schema/aircover-pipeline-agent-output-1.0.json
+  - name: template_id
+    type: string
+    source: json-schema/aircover-pipeline-agent-output-1.0.json
+  - name: properties
+    type: array
+    note: Each property carries a title, a result and (for scoring agents) a score and max score. Join on title, NEVER on the positional key — the provider's skills say keys are positional and vary.
+    source: json-schema/aircover-pipeline-agent-output-1.0.json
+  read_by: [agent_results]
+- name: QualificationResult
+  id_field: (deal_key, template_id)
+  fields: []
+  note: Deal-level qualification scoring (dimension, score, max_score, result_summary per the path-to-quota skill's CSV columns).
+  read_by: [get_qualification_results]
+- name: Team
+  id_field: id
+  fields: []
+  read_by: [get_teams]
+  note: Referenced from Meeting.team_ids.
+- name: Report
+  id_field: id
+  fields: []
+  read_by: [list_reports, read_report]
+  note: Weekly reports produced by dispatch agents.
+- name: Document
+  id_field: null
+  fields: []
+  note: Indexed content from Google Drive, OneDrive or Highspot; queried by natural language rather than by id.
+  read_by: [ask_documents]
+relationships:
+- from: Deal
+  to: Meeting
+  type: has_many
+  via: completed_meetings
+- from: Meeting
+  to: Deal
+  type: belongs_to
+  via: deal_id / deal_key (prospect_org + deal_id)
+- from: Meeting
+  to: Team
+  type: has_many
+  via: team_ids
+- from: Meeting
+  to: Transcript
+  type: has_one
+  via: meeting_id
+- from: Meeting
+  to: AgentResult
+  type: has_many
+  via: meeting_id
+- from: Agent
+  to: AgentResult
+  type: has_many
+  via: template_id
+- from: Deal
+  to: QualificationResult
+  type: has_many
+  via: deal_key

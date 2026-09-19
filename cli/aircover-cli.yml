@@ -1,0 +1,61 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/Aircover/aircover-pipeline (README.md, CHANGELOG.md, pyproject.toml) + https://pypi.org/project/aircover-pipeline/
+name: aircover-pipeline
+official: true
+license: MIT
+version: 1.0.3
+package: packages/aircover-packages.yml
+summary: >-
+  Official Python CLI that pulls a list of meetings from the Aircover customer REST API for a date range and
+  runs a coaching agent template against each one, writing structured JSON (with published JSON Schemas)
+  to disk. Built for batch/cron use against the customer API, not the public MCP surface.
+install:
+- method: pip
+  command: pip install aircover-pipeline
+- method: source
+  command: pip install .   # from a clone of github.com/Aircover/aircover-pipeline
+- method: make
+  command: make install    # creates .venv and installs deps
+authentication:
+- method: username + password
+  env: [AIRCOVER_USERNAME, AIRCOVER_PASSWORD]
+  note: POST /auth/login on https://api.aircover.ai; rejected for SSO-only accounts.
+- method: bearer token
+  env: [AIRCOVER_ACCESS_TOKEN, AIRCOVER_REFRESH_TOKEN]
+  note: Copied from the signed-in web app (bookmarklet / console snippet documented in the README); automatic refresh + re-login fallback.
+- env: AIRCOVER_BASE_URL
+  note: Points the client at a non-production environment; default https://api.aircover.ai.
+commands:
+- group: templates
+  commands:
+  - '--list-templates'
+  note: Lists coaching agent templates (GET /coaching-templates).
+- group: run
+  commands:
+  - '--start YYYY-MM-DD --end YYYY-MM-DD --template-id <id> --output-dir ./out'
+  - '--limit N'
+  - '--resume'
+  - '--exclude-domains'
+  - '--filter-emails'
+  - '--filter-teams'
+  - '--dry-run'
+  - '--verbose'
+  - '--base-url'
+  - '--version'
+  note: Fetches every meeting in the window (GET /analytics/, auto-chunked into 3-month windows, deduplicated) and runs GET /transcript/coaching per meeting.
+outputs:
+  meetings.json: json-schema/aircover-pipeline-meetings-1.0.json
+  agent-outputs/agent_<meeting_id>.json: json-schema/aircover-pipeline-agent-output-1.0.json
+  summary.json: json-schema/aircover-pipeline-summary-1.0.json
+  failures.json: json-schema/aircover-pipeline-failures-1.0.json
+exit_codes:
+  0: success
+  1: partial failure (some rows failed)
+  3: crash or Ctrl+C
+runtime_behaviour:
+  retries: Exponential backoff on 429 and 5xx; honors Retry-After (seconds form) on 429.
+  atomic_writes: tempfile + fsync + os.replace, 0o600 permissions, so --resume never skips a half-written file.
+requirements:
+  python: '>=3.10'
+  dependencies: [requests>=2.31]

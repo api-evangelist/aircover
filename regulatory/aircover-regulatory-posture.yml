@@ -1,0 +1,78 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: >-
+  https://www.aircover.ai/privacy-policy (Last updated December 2025) and https://www.aircover.ai/trust-center
+  read via Accept: text/markdown, plus conventional-path probes on www.aircover.ai and the artifacts
+  harvested this pass (well-known/, security/, lifecycle/, conformance/), 2026-09-19
+name: Aircover Regulatory Posture
+description: >-
+  Harvest-only record of horizontal regulatory signals Aircover publishes. One signal carries substance: the
+  privacy policy states a data-subject request channel (privacy@aircover.ai) with a 60-day deletion
+  commitment and access/correction rights. Everything else is either offered ON REQUEST rather than published
+  (subprocessor list, DPA, Transfer Impact Assessment — all "by contacting privacy@aircover.ai") or absent
+  (no accessibility statement or VPAT, no SBOM, no support-lifetime statement, no AI transparency page, no
+  GPC statement — the policy says DNT signals are not honored — no transparency report, no data-residency
+  option, no incident-notification SLA on a public page). The SOC 2 Type II and GDPR claims live in
+  conformance/aircover-conformance.yml; they are prose claims without a published report.
+signals:
+  data_subject_request:
+    url: https://www.aircover.ai/privacy-policy
+    channel: privacy@aircover.ai (email; no web form, no API)
+    stated_period: 'We will process deletion requests within 60 days. Upon account termination, customer meeting data and transcripts are deleted within 60 days.'
+    rights_stated: [access, correction, deletion, opt-out of third-party sharing, California Civil Code 1798.83 disclosure request]
+    note: Opt-out requests "may take up to ten (10) business days" to take effect (verbatim).
+on_request_only:
+  subprocessors: 'A current list of sub-processors is available upon request by contacting privacy@aircover.ai.'
+  dpa: 'You may request a copy of our Data Processing Addendum (DPA) and Transfer Impact Assessment by contacting privacy@aircover.ai.'
+  note: Not recorded as signals — the page names the document but does not carry it.
+statements_not_recorded_as_signals:
+  processing_location:
+    statement: We process Personal Information in the US.
+    why_not_a_signal: A disclosure of where processing happens, not a data-residency option a customer can choose.
+  model_training:
+    statement: >-
+      Customer data is not used to train AI models. We have contractual agreements with Our AI sub-processors
+      prohibiting use of your data for model training.
+    why_not_a_signal: A non-use commitment, not a training-data summary of the models Aircover ships.
+  do_not_track:
+    statement: Our service does not currently respond to DNT signals.
+    why_not_a_signal: >-
+      Global Privacy Control is not mentioned anywhere in the policy; the nearest statement is a refusal to
+      honor DNT, so global_privacy_control is absent rather than false-by-probe.
+probes:
+- url: https://www.aircover.ai/accessibility
+  status: 404
+- url: https://www.aircover.ai/accessibility/vpat
+  status: 404
+- url: https://www.aircover.ai/legal/subprocessors
+  status: 404
+- url: https://www.aircover.ai/subprocessors
+  status: 404
+- url: https://www.aircover.ai/legal/dpa
+  status: 404
+- url: https://www.aircover.ai/dpa
+  status: 404
+- url: https://www.aircover.ai/privacy/requests
+  status: 404
+- url: https://www.aircover.ai/transparency
+  status: 404
+- url: https://www.aircover.ai/security/sbom
+  status: 404
+- url: https://www.aircover.ai/security
+  status: 404
+- url: https://www.aircover.ai/docs/data-residency
+  status: 404
+- url: https://www.aircover.ai/ai/transparency
+  status: 404
+- url: https://www.aircover.ai/legal/report-content
+  status: 404
+- url: https://www.aircover.ai/trust-center/compliance
+  status: 404
+  note: Linked from llms.txt as the compliance page; returns a real 404.
+- url: https://www.aircover.ai/trust-center
+  status: 200
+- url: https://www.aircover.ai/privacy-policy
+  status: 200
+- url: https://www.aircover.ai/.well-known/security.txt
+  status: 404

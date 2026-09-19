@@ -1,0 +1,35 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.aircover.ai/.well-known/oauth-authorization-server
+docs: https://www.aircover.ai/developers
+derived_from: openapi/aircover-openapi.yml
+issuer: https://api.aircover.ai
+schemes:
+- name: oauth2
+  source: openapi/aircover-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.aircover.ai/oauth/authorize
+    tokenUrl: https://api.aircover.ai/oauth/token
+  description: OAuth 2.0 authorization code flow with PKCE (S256) and dynamic client registration.
+    Scopes are granted per-client and always bounded by the authenticated user's own organization
+    permissions — an agent can never see more than the user who authorized it.
+scopes:
+- scope: mcp
+  description: >-
+    Access the MCP tool surface only: read access to meetings, transcripts, AI agent results, deal
+    qualification, reports, teams, and indexed documents. Does NOT grant account administration, billing,
+    user management, or write access to CRM integrations.
+  access: read
+  flows:
+  - authorizationCode
+  sources:
+  - https://api.aircover.ai/.well-known/oauth-authorization-server (scopes_supported)
+  - openapi/aircover-openapi.yml
+  - https://www.aircover.ai/developers
+permission_model: >-
+  Layered. A token's scope caps what the client may request; every request is additionally bounded by the
+  authorizing user's own role and organization, so an agent can never see data the user could not.
+  Scopes are requested at authorization time; the developer page asks clients to request only what they
+  need. Tokens are revocable at any time via https://api.aircover.ai/oauth/revoke.
+scope_count: 1

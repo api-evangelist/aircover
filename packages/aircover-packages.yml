@@ -1,0 +1,46 @@
+generated: '2026-09-19'
+method: searched
+source: https://pypi.org/pypi/aircover-pipeline/json (registry metadata, read 2026-09-19) + https://www.aircover.ai/llms.txt + https://github.com/Aircover
+summary: >-
+  One first-party package: the aircover-pipeline Python CLI and client library on PyPI, published by
+  Aircover, Inc. (support@aircover.ai) under MIT. It wraps the CUSTOMER REST API (username/password or bearer
+  token, /analytics/, /coaching-templates, /transcript/coaching), not the public OAuth/MCP agent surface. No
+  npm (aircover, @aircover/mcp both 404 on registry.npmjs.org), RubyGems, Maven, NuGet, Go, Packagist or
+  crates.io packages exist. The GitHub org's other five repos are forks (BlackHole, picovoice, flutter-quill,
+  moonshine, moonshine-swift) and are not Aircover packages.
+packages:
+- language: python
+  registry: pypi
+  name: aircover-pipeline
+  url: https://pypi.org/project/aircover-pipeline/
+  install: pip install aircover-pipeline
+  official: true
+  version: 1.0.3
+  published: '2026-06-01'
+  first_release: '2026-06-01'
+  releases: 1
+  license: MIT
+  python_requires: '>=3.10'
+  entry_point: aircover-pipeline (CLI); from aircover_client import AircoverClient (library)
+  source: https://github.com/Aircover/aircover-pipeline
+  changelog: https://github.com/Aircover/aircover-pipeline/blob/main/CHANGELOG.md
+  author: Aircover, Inc. <support@aircover.ai>
+  note: >-
+    PyPI lists only 1.0.3 (uploaded 2026-06-01T05:30:39); the repository CHANGELOG records 1.0.0-1.0.3 all dated
+    2026-05-31, so the earlier versions were never published to the index. Wraps the customer REST API, which
+    is undocumented publicly — an Aircover account with API access is required.
+- language: agent-skill
+  registry: github-release
+  name: aircover-skills
+  url: https://github.com/Aircover/aircover-skills
+  install: Download the .skill asset from the GitHub release and add it under claude.ai Customize > Skills
+  official: true
+  version: 1.0.0
+  published: '2026-06-19'
+  license: MIT
+  note: >-
+    Not a software package: four packaged Agent Skills (.skill files) released on GitHub — aircover-mutual-action-plan
+    (2026-06-09), pre-call-prep (2026-06-10), product-sentiment-tracker (2026-06-10), path-to-quota (2026-06-19),
+    each tagged <skill>-v1.0.0; published is the latest of the four (api.github.com/repos/Aircover/aircover-skills/releases).
+    Indexed in skills/_index.yml.
+sdk_count: 1

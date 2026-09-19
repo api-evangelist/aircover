@@ -64,5 +64,25 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aircover is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Aircover is an AI-native revenue agent platform for sales teams. Specialist AI agents work before, during
+and after every customer conversation — joining Zoom, Microsoft Teams, Google Meet and Webex calls to surface
+real-time coaching, objection handling, battlecards and technical answers from live transcription (no recording
+by default), then generating notes, follow-ups, MEDDPICC-style qualification scoring and CRM updates into
+Salesforce, HubSpot and ServiceNow.
+
+For developers and agents, Aircover publishes:
+
+- **MCP server** — a remote Model Context Protocol server at `https://api.aircover.ai/mcp` (Streamable HTTP,
+  OAuth 2.0 with PKCE and RFC 7591 dynamic client registration), with twelve read tools over meetings,
+  transcripts, agent results, deals, teams, reports and indexed documents.
+- **OpenAPI 3.0.3** — <https://www.aircover.ai/openapi.json>, covering the OAuth endpoints, the discovery
+  documents and the MCP JSON-RPC endpoint.
+- **Discovery** — RFC 8414 and RFC 9728 metadata on `api.aircover.ai`, an MCP registry `server.json` at
+  `/.well-known/mcp.json`, `llms.txt`, and markdown content negotiation on every page.
+- **Open source** — four packaged Agent Skills ([aircover-skills](https://github.com/Aircover/aircover-skills))
+  and a Python pipeline CLI ([aircover-pipeline](https://github.com/Aircover/aircover-pipeline), PyPI).
+
+The full customer REST API and webhooks are available to customers on request and are not publicly documented.
+
+- <https://www.aircover.ai/>
+- <https://www.aircover.ai/developers>

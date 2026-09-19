@@ -1,0 +1,125 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://www.aircover.ai/developers + https://www.aircover.ai/trust-center + live probes of
+  https://api.aircover.ai/.well-known/* and https://api.aircover.ai/mcp on 2026-09-19, cross-checked against
+  openapi/_original/aircover-openapi.json
+standards:
+- id: openapi-3.0
+  name: OpenAPI 3.0
+  conforms: true
+  evidence: >-
+    openapi/_original/aircover-openapi.json declares "openapi": "3.0.3", 7 paths / 7 operations with unique
+    operationIds, descriptions on every operation, 10 component schemas and an oauth2 securityScheme. Served
+    from https://www.aircover.ai/openapi.json (HTTP 200, application/json, 16,478 bytes).
+- id: mcp
+  name: Model Context Protocol (Streamable HTTP)
+  conforms: true
+  evidence: >-
+    https://api.aircover.ai/mcp answers POST initialize / tools/list with 401 + WWW-Authenticate: Bearer
+    resource_metadata="https://api.aircover.ai/.well-known/oauth-protected-resource", the MCP authorization
+    spec's challenge shape; CORS allows the Mcp-Protocol-Version header. The developer page names the
+    transport as Streamable HTTP.
+- id: mcp-registry-server-json
+  name: MCP Registry server.json
+  conforms: true
+  evidence: >-
+    https://www.aircover.ai/.well-known/mcp.json (200) declares $schema
+    https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json, name ai.aircover/mcp, one
+    remotes[] entry of type streamable-http. Saved to well-known/aircover-mcp.json.
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749) authorization code
+  conforms: true
+  evidence: >-
+    Authorization-server metadata lists grant_types_supported [authorization_code, refresh_token],
+    response_types_supported [code]; openapi.json securitySchemes.oauth2 declares the authorizationCode flow
+    with the same endpoints.
+- id: pkce
+  name: PKCE (RFC 7636)
+  conforms: true
+  evidence: code_challenge_methods_supported ["S256"] in https://api.aircover.ai/.well-known/oauth-authorization-server; the developer page says PKCE (S256) is required.
+- id: rfc7591
+  name: OAuth 2.0 Dynamic Client Registration (RFC 7591)
+  conforms: true
+  evidence: >-
+    registration_endpoint https://api.aircover.ai/oauth/register is advertised in the RFC 8414 document; a
+    live anonymous POST with {} returned 400 {"error":"invalid_client_metadata","error_description":
+    "redirect_uris is required"} — the RFC 7591 error shape from a live registration endpoint.
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: true
+  evidence: >-
+    https://api.aircover.ai/.well-known/oauth-authorization-server returns 200 application/json with issuer,
+    authorization_endpoint, token_endpoint, registration_endpoint, revocation_endpoint, scopes_supported,
+    response_types_supported, grant_types_supported, code_challenge_methods_supported and
+    token_endpoint_auth_methods_supported. www.aircover.ai 301s the same path to it.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+  conforms: true
+  evidence: >-
+    https://api.aircover.ai/.well-known/oauth-protected-resource returns 200 with resource
+    https://api.aircover.ai/mcp and authorization_servers [https://api.aircover.ai]; the 401 from /mcp
+    references it via WWW-Authenticate resource_metadata.
+- id: rfc7009
+  name: OAuth 2.0 Token Revocation (RFC 7009)
+  conforms: true
+  evidence: revocation_endpoint https://api.aircover.ai/oauth/revoke in the RFC 8414 metadata and operation oauthRevokeToken in the OpenAPI.
+- id: llms-txt
+  name: llms.txt
+  conforms: true
+  evidence: https://www.aircover.ai/llms.txt (200, text/plain, 22,971 bytes) — H1, blockquote summary, H2 link sections. Saved to llms/aircover-llms.txt.
+- id: markdown-content-negotiation
+  name: Markdown content negotiation (acceptmarkdown.com convention)
+  conforms: true
+  evidence: >-
+    GET https://www.aircover.ai/pricing with Accept: text/markdown returned 200 text/markdown; charset=utf-8
+    (verified on /pricing, /trust-center, /privacy-policy, /terms-and-conditions, /about, /blog, 2026-09-19).
+    Unknown paths return a real 404 (probed /definitely-not-here-xyz -> 404), as the developer page promises.
+- id: agent-skills
+  name: Agent Skills (SKILL.md with name/description frontmatter)
+  conforms: true
+  evidence: Four SKILL.md files in https://github.com/Aircover/aircover-skills, each with YAML frontmatter name + description and a packaged .skill release; saved verbatim to skills/.
+- id: oidc
+  name: OpenID Connect Discovery
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on www.aircover.ai and api.aircover.ai. Aircover consumes OIDC (Google, Microsoft, per-customer OIDC/SSO providers) for end-user sign-in but does not act as an OpenID Provider.
+- id: rfc9116
+  name: security.txt (RFC 9116)
+  conforms: false
+  evidence: /.well-known/security.txt and /security.txt return 404 on www.aircover.ai; 404 on api.aircover.ai.
+- id: rfc9727
+  name: API Catalog (RFC 9727)
+  conforms: false
+  evidence: /.well-known/api-catalog returns 404 on www.aircover.ai and api.aircover.ai.
+- id: apis-json
+  name: APIs.json
+  conforms: false
+  evidence: /apis.json, /apis.yml and /.well-known/apis.json all 404 on www.aircover.ai and api.aircover.ai.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json return 404 on www.aircover.ai and api.aircover.ai (app.aircover.ai answers 200 HTML for every path and is not a document).
+- id: rfc9457
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence: The contract's error shapes are OAuth-style {error, error_description} (OAuthError) and JSON-RPC {code, message, data} (JsonRpcError); no application/problem+json anywhere. The live 401 body is empty.
+- id: rfc8594
+  name: Deprecation / Sunset headers (RFC 8594)
+  conforms: false
+  evidence: No Deprecation or Sunset header declared in the contract or observed; no deprecation policy page.
+compliance_programs:
+- id: soc2-type2
+  name: SOC 2 Type II
+  claimed: true
+  evidence: https://www.aircover.ai/trust-center ("Aircover is SOC 2 Type 2 certified") and llms.txt. A prose claim; no report or auditor letter is published, and there is no trust-portal (Vanta/Drata) with a downloadable report.
+- id: gdpr
+  name: GDPR
+  claimed: true
+  evidence: Trust center and privacy policy — SCCs for EU/UK transfers, a Transfer Impact Assessment, DPA on request via privacy@aircover.ai.
+domain_standard_conformance:
+  note: >-
+    No domain standard is declared by the contract. Sales-enablement / conversation-intelligence has no
+    market-wide interchange standard (nothing SCIM-, OData- or HL7-shaped applies), so this slot is honestly
+    empty rather than filled. The one machine-readable interop claim — Salesforce/HubSpot field mirroring in
+    get_deal's crm block — is a vendor mapping, not a standard.
+  standards: []

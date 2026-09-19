@@ -1,18 +1,113 @@
 aid: aircover
 name: Aircover
-description: 'Aircover is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Aircover is an AI-native revenue agent platform for sales teams: specialist AI agents work before, during
+  and after every customer conversation, joining Zoom, Microsoft Teams, Google Meet and Webex calls to
+  surface real-time coaching, objection handling, battlecards and technical answers from live transcription
+  (no recording by default), then generating notes, follow-ups, MEDDPICC-style qualification scoring and
+  CRM updates into Salesforce, HubSpot and ServiceNow. For developers and agents the company publishes a
+  remote Model Context Protocol server at https://api.aircover.ai/mcp (Streamable HTTP, OAuth 2.0 with
+  PKCE and RFC 7591 dynamic client registration, twelve read tools over meetings, transcripts, agent results,
+  deals, teams, reports and documents), an OpenAPI 3.0.3 contract for the public agent API, an MCP registry
+  server.json manifest, llms.txt, markdown content negotiation on every page, four open-source Claude/ChatGPT
+  Skills and a PyPI-published Python pipeline CLI. The full customer REST API and webhooks are customer-only.
+image: https://www.aircover.ai/assets/apple-touch-icon.png
 url: https://raw.githubusercontent.com/api-evangelist/aircover/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Sales Enablement
+- Conversation Intelligence
+- Sales Coaching
+- Revenue Intelligence
+- AI Agents
+- MCP
+- agent-native
+- CRM
+- Meetings
+- Transcription
+- OAuth
+apis:
+- aid: aircover:aircover-mcp-server
+  name: Aircover MCP Server
+  description: >-
+    Remote Model Context Protocol server over Streamable HTTP at https://api.aircover.ai/mcp. An authenticated
+    Aircover user's agent can list and read meetings and transcripts, ask questions across indexed documents,
+    list AI agents and fetch their per-meeting results, read deal qualification results, list deals, teams
+    and reports. Twelve read-only tools; access is OAuth 2.0 authorization code + PKCE with dynamic client
+    registration, and every request is bounded by the authorizing user's own role and organization.
+  humanURL: https://www.aircover.ai/developers
+  baseURL: https://api.aircover.ai/mcp
+  image: https://www.aircover.ai/assets/apple-touch-icon.png
+  tags:
+  - MCP
+  - agent-native
+  - Sales Enablement
+  - Conversation Intelligence
+  properties:
+  - type: MCPServer
+    url: mcp/aircover-mcp.yml
+  - type: MCPServer
+    url: https://api.aircover.ai/mcp
+  - type: MCPServer
+    url: mcp/aircover-server.json
+  - type: MCPServer
+    url: https://www.aircover.ai/.well-known/mcp.json
+  - type: ToolCrosswalk
+    url: mcp/aircover-tool-crosswalk.yml
+  - type: Documentation
+    url: https://www.aircover.ai/developers
+  - type: Documentation
+    url: https://www.aircover.ai/claude-chatgpt-gemini
+  - type: Authentication
+    url: authentication/aircover-authentication.yml
+  - type: OAuthScopes
+    url: scopes/aircover-scopes.yml
+- aid: aircover:aircover-public-agent-api
+  name: Aircover Public Agent API
+  description: >-
+    The public, agent-facing API surface of Aircover described by an OpenAPI 3.0.3 contract: the OAuth 2.0
+    authorization server (authorize, token, dynamic client registration, revocation), the RFC 8414 and
+    RFC 9728 discovery documents, and the MCP JSON-RPC endpoint. Seven operations with unique operationIds
+    and typed schemas. The full customer REST API used by the aircover-pipeline CLI (/auth/login,
+    /analytics/, /coaching-templates, /transcript/coaching) is available to customers on request and is
+    not covered by the published contract.
+  humanURL: https://www.aircover.ai/developers
+  baseURL: https://api.aircover.ai
+  image: https://www.aircover.ai/assets/apple-touch-icon.png
+  tags:
+  - OAuth
+  - MCP
+  - Discovery
+  - agent-native
+  properties:
+  - type: OpenAPI
+    url: openapi/aircover-openapi.yml
+  - type: OpenAPI
+    url: https://www.aircover.ai/openapi.json
+  - type: Documentation
+    url: https://www.aircover.ai/developers
+  - type: APIReference
+    url: https://www.aircover.ai/developers
+  - type: Authentication
+    url: authentication/aircover-authentication.yml
+  - type: OAuthScopes
+    url: scopes/aircover-scopes.yml
+  - type: Conventions
+    url: conventions/aircover-conventions.yml
+  - type: ErrorCatalog
+    url: errors/aircover-problem-types.yml
+  - type: Overlay
+    url: overlays/aircover-openapi-overlay.yaml
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-meetings-1.0.json
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-agent-output-1.0.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +115,97 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.aircover.ai/
+- type: DeveloperPortal
+  url: https://www.aircover.ai/developers
+- type: Documentation
+  url: https://www.aircover.ai/developers
+- type: APIReference
+  url: https://www.aircover.ai/developers
+- type: GettingStarted
+  url: https://www.aircover.ai/developers
+- type: Support
+  url: https://www.aircover.ai/contact-us
+- type: Blog
+  url: https://www.aircover.ai/blog
+- type: GitHubOrganization
+  url: https://github.com/Aircover
+- type: Pricing
+  url: https://www.aircover.ai/pricing
+- type: Login
+  url: https://app.aircover.ai/login
+- type: TermsOfService
+  url: https://www.aircover.ai/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://www.aircover.ai/privacy-policy
+- type: TrustCenter
+  url: https://www.aircover.ai/trust-center
+- type: Compliance
+  url: https://www.aircover.ai/trust-center
+- type: About
+  url: https://www.aircover.ai/about
+- type: Careers
+  url: https://www.aircover.ai/careers
+- type: Integrations
+  url: https://www.aircover.ai/partners-integrations
+- type: LinkedIn
+  url: https://www.linkedin.com/company/aircover-ai
+- type: LLMsTxt
+  url: llms/aircover-llms.txt
+- type: LLMsTxt
+  url: https://www.aircover.ai/llms.txt
+- type: MCPServer
+  url: mcp/aircover-mcp.yml
+- type: MCPServer
+  url: mcp/aircover-server.json
+- type: ToolCrosswalk
+  url: mcp/aircover-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgentSkill
+  url: https://github.com/Aircover/aircover-skills
+- type: WellKnown
+  url: well-known/aircover-well-known.yml
+- type: Packages
+  url: packages/aircover-packages.yml
+- type: SDKs
+  url: packages/aircover-packages.yml
+- type: CLI
+  url: cli/aircover-cli.yml
+- type: ChangeLog
+  url: changelog/aircover-changelog.yml
+- type: ChangeLog
+  url: https://github.com/Aircover/aircover-pipeline/blob/main/CHANGELOG.md
+- type: Authentication
+  url: authentication/aircover-authentication.yml
+- type: OAuthScopes
+  url: scopes/aircover-scopes.yml
+- type: Conformance
+  url: conformance/aircover-conformance.yml
+- type: Conventions
+  url: conventions/aircover-conventions.yml
+- type: ErrorCatalog
+  url: errors/aircover-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/aircover-lifecycle.yml
+- type: Plans
+  url: plans/aircover-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/aircover-rate-limits.yml
+- type: Overlay
+  url: overlays/aircover-openapi-overlay.yaml
+- type: DomainSecurity
+  url: security/aircover-domain-security.yml
+- type: TrustCenter
+  url: security/aircover-trust-center.yml
+- type: DataModel
+  url: data-model/aircover-data-model.yml
+- type: JSONSchema
+  url: json-schema/aircover-pipeline-meetings-1.0.json
+- type: DataSubjectRequest
+  url: regulatory/aircover-regulatory-posture.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 35
+  pass: local-v3

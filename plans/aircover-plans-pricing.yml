@@ -1,0 +1,30 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.aircover.ai/pricing
+fetched: '2026-09-19'
+plan_count: 0
+model: per-user, quote-based
+currency: null
+summary: >-
+  Aircover publishes a pricing page but no priced tiers. The page states "Per-user pricing with unlimited AI
+  Agents and queries. No hidden fees.", lists what "every plan includes" (In-Call AI, AI Agents, Conversation
+  Intelligence, AI CRM Sync, AI Notes, Ask Aircover) and ends in a "Get a personalized quote" form promising a
+  custom proposal within 24 hours. The terms of service say charges are made in advance, annually or per the
+  billing frequency in the Order Form, and are nonrefundable. Developer access is not priced separately: the
+  MCP server and OAuth surface are included with any Aircover account, and new self-serve sign-ups receive a
+  trial license automatically (developer page + llms.txt).
+plans: []
+included_in_every_plan:
+- In-Call AI
+- AI Agents
+- Conversation Intelligence
+- AI CRM Sync
+- AI Notes
+- Ask Aircover
+developer_access:
+  mcp_server: included with an Aircover account; no separate API plan
+  trial: automatic trial license on self-serve sign-up with a work email (personal email domains refused)
+  rest_api_and_webhooks: available to customers on request via support@aircover.ai
+billing_terms:
+  source: https://www.aircover.ai/terms-and-conditions
+  note: 'Charges in advance, annually or per the Order Form billing frequency; payments due within thirty (30) days of invoice and nonrefundable (section 7.2).'

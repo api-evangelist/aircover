@@ -1,0 +1,90 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.aircover.ai/developers
+derived_from: openapi/aircover-openapi.yml
+docs:
+- https://www.aircover.ai/developers
+- https://www.aircover.ai/llms.txt
+- https://github.com/Aircover/aircover-skills
+base_url: https://api.aircover.ai
+media_type: application/json
+surface_shape: >-
+  The public surface is an OAuth 2.0 authorization server plus one JSON-RPC 2.0 endpoint (POST /mcp) that
+  carries Model Context Protocol messages. There are no resource-style REST paths in the public contract, so
+  most REST conventions (pagination params, sparse fields, expansion, resource versioning) do not apply; the
+  conventions that do are OAuth's and JSON-RPC's.
+auth:
+  style: OAuth 2.0 bearer token (authorization code + PKCE S256, dynamic client registration); scope mcp
+  detail: authentication/aircover-authentication.yml
+  scopes: scopes/aircover-scopes.yml
+  challenge: 401 with WWW-Authenticate Bearer resource_metadata="https://api.aircover.ai/.well-known/oauth-protected-resource"
+idempotency:
+  coverage: na
+  supported: null
+  header: null
+  scope: []
+  retention: null
+  description: >-
+    Not applicable — the MCP tool surface is read-only (twelve read tools, no write tools documented; the mcp
+    scope explicitly excludes write access to CRM integrations, account administration, billing and user
+    management). The only mutating public operations are OAuth plumbing (register a client, exchange or refresh
+    a token, revoke a token), which are not idempotency-key surfaces. No Idempotency-Key header exists.
+dry_run_mode:
+  coverage: na
+  note: No write surface to rehearse; the pipeline CLI's --dry-run is a client-side flag, not an API mode.
+reversibility:
+  status: na
+  method: derived
+  derived_from: openapi/aircover-openapi.yml
+  docs:
+  - https://www.aircover.ai/developers
+  summary: >-
+    Not applicable — no public write surface. Every MCP tool reads meetings, transcripts, agent results, deals,
+    teams, reports or documents; nothing an agent can do through the public contract creates, changes or
+    deletes customer data, so there is nothing to reverse. The one revocable artifact is the OAuth token itself:
+    /oauth/revoke (operationId oauthRevokeToken) revokes a token "at any time" per the developer page — a
+    credential lifecycle action, not a data reversal, and it carries no window because it is immediate.
+  reversals: []
+  token_revocation:
+    operation: oauthRevokeToken
+    path: POST /oauth/revoke
+    window: none stated (immediate)
+    source: https://www.aircover.ai/developers — "Tokens are revocable at any time via the revocation endpoint."
+pagination:
+  style: none documented
+  note: >-
+    list_meetings takes start/end dates and an optional owner; the provider's own skills warn that a wide window
+    "returns 200+ meetings" and advise narrowing by date or owner rather than paging — no cursor, page or limit
+    parameter is documented for any tool.
+field_expansion:
+  supported: partial
+  note: get_meeting takes include_previous_meeting_notes=true (documented in aircover-skills); no generic fields/expand parameter.
+identifiers:
+  meeting_id: 32-character opaque id
+  deal_key: composite "prospect_org/deal_id" — the skills say never to use the bare integer deal_id, which is only unique within a prospect_org
+  template_id: agent id returned by list_agents, used by agent_results and get_qualification_results
+request_tracing:
+  header: x-amzn-requestid (AWS API Gateway) and cf-ray (Cloudflare) observed on every response; no provider-documented request-id header.
+versioning:
+  style: unversioned paths; info.version 1.0.0; server.json version 1.0.0
+  detail: lifecycle/aircover-lifecycle.yml
+error_envelope:
+  oauth: '{"error": "<code>", "error_description": "<text>"} — RFC 6749 / RFC 7591 shape (observed live: 400 invalid_client_metadata)'
+  mcp: 'JSON-RPC 2.0 {"jsonrpc":"2.0","id":..,"error":{"code":<int>,"message":<str>,"data":..}} per the JsonRpcError schema'
+  unauthenticated: 401 with an empty body and a WWW-Authenticate challenge
+  detail: errors/aircover-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  observed_headers: []
+  note: >-
+    No rate limit is documented for /mcp or /oauth/*. The customer REST API returns 429 with Retry-After
+    (the official pipeline client honors it), which is the only rate-limit evidence the provider publishes;
+    see rate-limits/aircover-rate-limits.yml.
+agent_guidance:
+  from_provider_skills:
+  - Use the full 32-char meeting id; filter by prospect_org or deal_key, never bare deal_id.
+  - Join agent_results properties on title, not positional key; discover field names at runtime.
+  - A get_deals cache-miss error means retry once, not that the deal is empty.
+  - Call get_deal once per unique (prospect_org, deal_id) and reuse it.
+  - Always pass owner to list_meetings for a rep's own view; omit it for org-wide.
+  markdown_negotiation: Request any www.aircover.ai page with Accept text/markdown to get clean markdown.

@@ -1,0 +1,81 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Aircover Public Agent API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-19'
+  method: generated
+  source: openapi/aircover-openapi.yml (verbatim copy of https://www.aircover.ai/openapi.json, 2026-09-19)
+  note: >-
+    Non-destructive enhancements only. The original contract is never mutated; this overlay records what the
+    enrichment pass learned from live probes and the provider's own published tool list, developer page and
+    open-source skills. Every added value is traceable to an artifact in this repository.
+extends: openapi/aircover-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/aircover
+    x-artifact-index:
+      authentication: authentication/aircover-authentication.yml
+      scopes: scopes/aircover-scopes.yml
+      conventions: conventions/aircover-conventions.yml
+      errors: errors/aircover-problem-types.yml
+      conformance: conformance/aircover-conformance.yml
+      lifecycle: lifecycle/aircover-lifecycle.yml
+      mcp: mcp/aircover-mcp.yml
+      tool_crosswalk: mcp/aircover-tool-crosswalk.yml
+      packages: packages/aircover-packages.yml
+      well_known: well-known/aircover-well-known.yml
+- target: $.paths['/mcp'].post
+  update:
+    x-mcp-tools:
+    - list_meetings
+    - get_meeting
+    - get_meeting_transcript
+    - ask_documents
+    - list_agents
+    - agent_results
+    - get_qualification_results
+    - get_deals
+    - get_deal
+    - get_teams
+    - list_reports
+    - read_report
+    x-mcp-tools-source: >-
+      Names agree across https://www.aircover.ai/developers, https://www.aircover.ai/llms.txt and this
+      operation's own description. Per-tool inputSchemas are auth-gated — an anonymous tools/list returns 401.
+    x-mcp-transport: streamable-http
+    x-mcp-manifest: https://www.aircover.ai/.well-known/mcp.json
+    x-mcp-read-only: true
+    x-probe:
+      fetched: '2026-09-19'
+      method: POST tools/list (anonymous)
+      http_status: 401
+      www_authenticate: Bearer resource_metadata="https://api.aircover.ai/.well-known/oauth-protected-resource"
+- target: $.paths['/oauth/register'].post
+  update:
+    x-probe:
+      fetched: '2026-09-19'
+      method: POST with an empty JSON body (anonymous)
+      http_status: 400
+      body: '{"error":"invalid_client_metadata","error_description":"redirect_uris is required"}'
+      note: Confirms the RFC 7591 registration endpoint is live and open to anonymous client registration.
+- target: $.paths['/.well-known/oauth-authorization-server'].get
+  update:
+    x-probe:
+      fetched: '2026-09-19'
+      http_status: 200
+      content_type: application/json
+      saved: well-known/aircover-oauth-authorization-server.json
+- target: $.paths['/.well-known/oauth-protected-resource'].get
+  update:
+    x-probe:
+      fetched: '2026-09-19'
+      http_status: 200
+      content_type: application/json
+      saved: well-known/aircover-oauth-protected-resource.json
+- target: $.tags
+  update:
+  - name: mcp
+    x-tool-count: 12
+    x-crosswalk: mcp/aircover-tool-crosswalk.yml

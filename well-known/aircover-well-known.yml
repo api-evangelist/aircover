@@ -1,0 +1,216 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on aircover.ai, www.aircover.ai, api.aircover.ai
+  (the API host, OpenAPI servers[] host, OAuth issuer AND the MCP resource host), app.aircover.ai (the web
+  console) and support.aircover.ai, 2026-09-19. Every row is a request that was issued; every status is the
+  one returned.
+summary:
+  hosts_probed: 5
+  documents_served: 3
+  hit_count: 3
+  note: >-
+    Aircover serves RFC 8414 authorization-server metadata and RFC 9728 protected-resource metadata on
+    api.aircover.ai (the issuer and the MCP resource server are the same host), and an MCP registry
+    server.json manifest at www.aircover.ai/.well-known/mcp.json. The bare domain 301s everything to www;
+    www 301s the two OAuth paths to api.aircover.ai (so they are reachable from the primary domain by
+    redirect, as the developer page states). No security.txt, openid-configuration, api-catalog,
+    ai-plugin.json, agent card, apis.json, ucp/acp or AAuth document exists on any host.
+  soft_404_control: >-
+    app.aircover.ai is an SPA catch-all: every /.well-known/* path AND the negative control
+    /.well-known/aircover-negative-control-7f3ab91c.json returned 200 text/html (60,666 bytes of app shell).
+    Nothing on that host is recorded as a document. www.aircover.ai and api.aircover.ai returned a real 404
+    for the negative control (path_echo_control: passed).
+hosts:
+- host: aircover.ai
+  role: registrable domain (301s every path to https://www.aircover.ai/...)
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+  - path: /.well-known/mcp.json
+    status: 301
+- host: www.aircover.ai
+  role: public website and developer page host
+  path_echo_control: passed
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    note: Redirects to https://api.aircover.ai/.well-known/oauth-authorization-server (recorded as a 200 document on that host).
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+    note: Redirects to https://api.aircover.ai/.well-known/oauth-protected-resource.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: application/json
+    file: aircover-mcp.json
+    standard: MCP Registry server.json (schemas/2025-12-11/server.schema.json)
+    note: Names the remote streamable-http endpoint https://api.aircover.ai/mcp, server name ai.aircover/mcp, version 1.0.0.
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/aircover-negative-control-7f3ab91c.json
+    status: 404
+    control: true
+- host: api.aircover.ai
+  role: API host, OpenAPI servers[] host, OAuth issuer and MCP resource server (https://api.aircover.ai/mcp)
+  path_echo_control: passed
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: aircover-oauth-authorization-server.json
+    standard: RFC 8414
+    note: >-
+      issuer https://api.aircover.ai; authorization, token, registration (RFC 7591) and revocation endpoints;
+      scopes_supported [mcp]; grant_types authorization_code + refresh_token; PKCE S256; token endpoint auth
+      client_secret_basic + client_secret_post. cache-control public, max-age=3600.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    file: aircover-oauth-protected-resource.json
+    standard: RFC 9728
+    note: resource https://api.aircover.ai/mcp; authorization_servers [https://api.aircover.ai].
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/aircover-negative-control-7f3ab91c.json
+    status: 404
+    control: true
+- host: app.aircover.ai
+  role: web console (SPA catch-all — 200 text/html for every path, including the negative control)
+  path_echo_control: failed
+  hit_count: 0
+  soft_404_control:
+    path: /.well-known/aircover-negative-control-7f3ab91c.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    bytes: 60666
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /.well-known/apis.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+  - path: /apis.json
+    status: 200
+    content_type: text/html; charset=utf-8
+    note: SPA shell, not a document — treated as a miss.
+- host: support.aircover.ai
+  role: Zendesk help center, restricted to signed-in customers (every path 302s to /hc/restricted)
+  hit_count: 0
+  documents:
+  - path: /.well-known/security.txt
+    status: 302
+  - path: /.well-known/openid-configuration
+    status: 302
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+  - path: /.well-known/oauth-protected-resource
+    status: 302
+  - path: /.well-known/api-catalog
+    status: 302
+  - path: /.well-known/ai-plugin.json
+    status: 302
+  - path: /.well-known/agent-card.json
+    status: 302
+  - path: /.well-known/agent.json
+    status: 302

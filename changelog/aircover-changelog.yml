@@ -1,0 +1,43 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/Aircover/aircover-pipeline/blob/main/CHANGELOG.md
+scope: >-
+  The only dated, versioned changelog Aircover publishes is for the aircover-pipeline CLI (Keep a Changelog
+  1.1.0 format, Semantic Versioning). The platform itself, the MCP server (server.json version 1.0.0) and the
+  public agent API (info.version 1.0.0) publish no changelog; product news lands on the blog undated.
+  www.aircover.ai/changelog and /release-notes both 404 (probed 2026-09-19).
+scheme: semver
+current_version: 1.0.3
+current_date: '2026-05-31'
+format: Keep a Changelog 1.1.0
+entries:
+- version: 1.0.3
+  date: '2026-05-31'
+  breaking: false
+  highlights:
+  - pyproject.toml no longer rejected by setuptools >=79 (removed mailto: URL from [project.urls])
+  - README test count corrected to 71; summary.json schema description for meetings_in_window clarified
+- version: 1.0.2
+  date: '2026-05-31'
+  breaking: false
+  highlights:
+  - '--limit N always means "up to N new meetings this run" when combined with --resume'
+  - Empty post-filter result still writes summary.json with zero counts
+  - Added public AircoverClient.base_url property
+- version: 1.0.1
+  date: '2026-05-31'
+  breaking: false
+  highlights:
+  - AircoverFetchAllFailed exception distinguishes API outage from empty result
+  - '--base-url flag / AIRCOVER_BASE_URL env var; --version flag; summary.json records package_version, ran_at, base_url and filters'
+  - '--filter-teams; exit code 3 for crashes; retry with exponential backoff on 429 / 5xx honoring Retry-After'
+  - Guarded resp.json(); refresh token no longer leaks under --verbose; atomic per-meeting writes
+- version: 1.0.0
+  date: '2026-05-31'
+  breaking: false
+  highlights:
+  - Initial release — AircoverClient (username/password + bearer auth, auto refresh), get_meetings() with 3-month chunking, get_agent_output(), get_templates(), CLI, JSON Schemas (draft 2020-12), 41 unit tests, MIT
+other_surfaces:
+  mcp_server: version 1.0.0 in /.well-known/mcp.json; no changelog
+  public_agent_api: info.version 1.0.0 in openapi.json; no changelog
+  product: https://www.aircover.ai/blog (undated product updates)

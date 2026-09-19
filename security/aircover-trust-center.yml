@@ -1,0 +1,36 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.aircover.ai/trust-center
+fetched: '2026-09-19'
+http_status: 200
+portal: false
+url: https://www.aircover.ai/trust-center
+summary: >-
+  A first-party trust page on the marketing site, not a trust portal — there is no Vanta/Drata/SafeBase
+  instance, no document request flow and no downloadable report. It names two compliance programs and four
+  security practices in prose, and it is the only place SOC 2 is asserted outside llms.txt.
+certifications:
+- name: SOC 2 Type II
+  claimed: true
+  evidence: 'Trust center: "Aircover is SOC 2 Type 2 certified, ensuring your data''s security and privacy with rigorous audits."'
+  report_available: false
+  auditor: not named
+- name: GDPR
+  claimed: true
+  evidence: 'Trust center: "Aircover complies with GDPR, safeguarding your privacy with utmost care and transparency in handling personal information." Privacy policy adds SCCs, a Transfer Impact Assessment and a DPA on request.'
+  report_available: false
+practices:
+- encryption: All data, authentication and tokens encrypted in transit and at rest.
+- single_sign_on: SSO authentication supported (Google, Microsoft, per-organization OIDC).
+- data_isolation: 'Data remains private and individually segmented by customer; "Customer data is not sold or used to train third-party AI models."'
+- no_recording: Real-time transcription without audio or video recording by default, for regions and accounts where recorded sales calls are prohibited.
+- ai_governance: Internal AI committee; the page claims approval by AI committees at Fortune 500 companies.
+gaps:
+- The linked compliance sub-page https://www.aircover.ai/trust-center/compliance (named in llms.txt) returns 404.
+- No security.txt, no vulnerability disclosure policy and no bug bounty on any host (probed 2026-09-19).
+- No published SOC 2 report, auditor letter, penetration-test summary or subprocessor list (the subprocessor list is available only on request).
+- No status page and no incident-history page.
+related:
+  conformance: conformance/aircover-conformance.yml
+  regulatory: regulatory/aircover-regulatory-posture.yml
+  domain_security: security/aircover-domain-security.yml

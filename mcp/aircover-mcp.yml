@@ -1,0 +1,154 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://www.aircover.ai/developers
+docs: https://www.aircover.ai/developers
+manifest: mcp/aircover-server.json
+manifest_source: https://www.aircover.ai/.well-known/mcp.json
+summary: >-
+  Aircover operates ONE remote Model Context Protocol server at https://api.aircover.ai/mcp (Streamable HTTP,
+  OAuth 2.0 authorization code + PKCE with RFC 7591 dynamic client registration). It is the provider's primary
+  agent surface: twelve read tools over meetings, transcripts, AI agent results, deal qualification, deals,
+  teams, reports and indexed documents, each call bounded by the authorizing user's organization role. The
+  server is registered under the MCP registry server.json name ai.aircover/mcp and is the backend for the
+  four open-source Aircover Skills.
+deployment:
+  mode: remote
+  endpoint: https://api.aircover.ai/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    A hosted HTTPS endpoint an MCP client POSTs to directly. Aircover ships no stdio package and documents no
+    npx/uvx install; the documented client setup is `claude mcp add --transport http aircover
+    https://api.aircover.ai/mcp` or adding a custom connector with that URL, after which the client discovers
+    OAuth automatically. An Aircover account (work email) is required; new users receive a trial license.
+servers:
+- id: aircover-mcp
+  name: Aircover
+  registry_name: ai.aircover/mcp
+  endpoint: https://api.aircover.ai/mcp
+  transport: streamable-http
+  auth: oauth2
+  auth_metadata:
+    authorization_server: https://api.aircover.ai/.well-known/oauth-authorization-server
+    protected_resource: https://api.aircover.ai/.well-known/oauth-protected-resource
+    scope: mcp
+    dynamic_client_registration: https://api.aircover.ai/oauth/register
+    pkce: S256
+  status: live
+  probe:
+    method: 'POST tools/list (and POST initialize)'
+    http_status: 401
+    content_length: 0
+    www_authenticate: 'Bearer resource_metadata="https://api.aircover.ai/.well-known/oauth-protected-resource"'
+    note: >-
+      The WWW-Authenticate challenge arrives as x-amzn-remapped-www-authenticate — the server sits behind AWS
+      API Gateway (x-amzn-requestid, x-amz-apigw-id) fronted by Cloudflare. GET /mcp without a token was not
+      answered with a session either. CORS allows Authorization, Content-Type and Mcp-Protocol-Version headers.
+    fetched: '2026-09-19'
+  tools_schema_status: auth-gated
+  tools_note: >-
+    The live tool list requires an OAuth bearer token, so inputSchemas below are NOT from an authenticated
+    tools/list. Tool NAMES are transcribed verbatim from three provider-published sources that agree (the
+    developer page, llms.txt and the /mcp operation description in openapi.json). Parameter names are taken
+    from call examples in the provider's own open-source Aircover Skills (github.com/Aircover/aircover-skills);
+    they are evidence of the real signature, not the schema itself, and need authenticated introspection to
+    confirm types and required-ness.
+  scope: Read-only access to the authorizing user's organization data. No write tools are documented.
+  tools:
+  - name: list_meetings
+    read_only: true
+    description: List meetings in a date range, optionally scoped to one owner's meetings.
+    documented_arguments:
+      start: date (YYYY-MM-DD)
+      end: date (YYYY-MM-DD)
+      owner: email of the meeting owner (optional — omit for the whole organization)
+    evidence: aircover-skills — "list_meetings(start, end) with optional owner"; "list_meetings has no account filter, so start from the deal"
+    response_notes: Each meeting carries prospect_org, deal_id, start_time and a summary title; a 32-character meeting id.
+  - name: get_meeting
+    read_only: true
+    description: Read one meeting — deal_team, prospect_attendees and the AI notes summary, optionally with previous-meeting notes.
+    documented_arguments:
+      meeting_id: full 32-character meeting id
+      include_previous_meeting_notes: boolean (optional)
+    evidence: aircover-skills — "get_meeting(meeting_id, include_previous_meeting_notes=true)"
+  - name: get_meeting_transcript
+    read_only: true
+    description: Read the full transcript of one meeting.
+    documented_arguments:
+      meeting_id: full 32-character meeting id
+    evidence: aircover-skills — "get_meeting_transcript(meeting_id)"
+  - name: ask_documents
+    read_only: true
+    description: Ask a natural-language question across the organization's indexed documents (playbooks, battlecards, case studies).
+    documented_arguments: {}
+    evidence: developer page + llms.txt name and description only; no skill calls it.
+  - name: list_agents
+    read_only: true
+    description: List the organization's AI agents (name, category, id); the id is used as template_id for agent_results and get_qualification_results.
+    documented_arguments:
+      category: string (optional, e.g. "qualification")
+    evidence: aircover-skills — "list_agents(category=\"qualification\")"
+  - name: agent_results
+    read_only: true
+    description: Run/read one AI agent's structured results for one meeting; properties are joined on title, not positional key.
+    documented_arguments:
+      meeting_id: full 32-character meeting id
+      template_id: agent id from list_agents
+    evidence: aircover-skills — "agent_results(meeting_id, template_id)"
+    response_notes: Meetings without a transcript are skipped by the agent (error, not empty result).
+  - name: get_qualification_results
+    read_only: true
+    description: Deal-level qualification scoring (MEDDPICC or another qualification agent) for one deal.
+    documented_arguments:
+      deal_key: composite "prospect_org/deal_id"
+      template_id: qualification agent id from list_agents
+    evidence: aircover-skills — "get_qualification_results(deal_key, template_id)"
+  - name: get_deals
+    read_only: true
+    description: Search deals by company name; returns deal_key, prospect_org, deal_id and nextMeetingDate.
+    documented_arguments:
+      search: company name substring
+    evidence: aircover-skills — "get_deals(search=\"<company>\")"; "a get_deals cache-miss error means retry once"
+  - name: get_deal
+    read_only: true
+    description: Read one deal — a crm block mirroring Salesforce/HubSpot fields (opportunity name and id, amount, close date, stage) and a completed_meetings array.
+    documented_arguments:
+      prospect_org: prospect organization key
+      deal_id: deal id (only meaningful with prospect_org)
+    evidence: aircover-skills — "get_deal(prospect_org, deal_id)"
+  - name: get_teams
+    read_only: true
+    description: List the organization's teams and rosters.
+    documented_arguments: {}
+    evidence: developer page + llms.txt name and description only.
+  - name: list_reports
+    read_only: true
+    description: List weekly and other reports available to the user.
+    documented_arguments: {}
+    evidence: developer page + llms.txt name and description only.
+  - name: read_report
+    read_only: true
+    description: Read one report.
+    documented_arguments: {}
+    evidence: developer page + llms.txt name and description only.
+  data_domains:
+  - meetings and transcripts (real-time transcription; no recording by default)
+  - AI agent results (extraction, scoring, hybrid and dispatch agents)
+  - deal qualification (MEDDPICC, BANT, SPIN, Sandler, Challenger, custom frameworks)
+  - deals with mirrored CRM fields (Salesforce, HubSpot)
+  - teams
+  - reports
+  - indexed documents (Google Drive / OneDrive / Highspot content)
+client_setup:
+  claude_code: claude mcp add --transport http aircover https://api.aircover.ai/mcp
+  claude_ai: Add a custom connector with the URL https://api.aircover.ai/mcp; OAuth is discovered automatically.
+  admin_settings: https://app.aircover.ai/integrations/mcp-settings
+  clients_named: [Claude Desktop, ChatGPT, Gemini, Cursor]
+skills:
+  index: skills/_index.yml
+  source: https://github.com/Aircover/aircover-skills
+openapi:
+  file: openapi/aircover-openapi.yml
+  operation: mcpJsonRpc
+  note: The OpenAPI contract models the endpoint as one JSON-RPC operation, not the twelve tools; see mcp/aircover-tool-crosswalk.yml.

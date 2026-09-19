@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.aircover/mcp",
+  "title": "Aircover",
+  "description": "Query your Aircover sales-meeting data: meetings, transcripts, AI agent results, deal qualification (MEDDPICC and more), reports, and indexed documents. Real-time sales coaching platform data via MCP.",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.aircover.ai/developers",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.aircover.ai/mcp"
+    }
+  ]
+}

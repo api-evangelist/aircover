@@ -1,0 +1,78 @@
+generated: '2026-09-19'
+method: derived
+source: mcp/aircover-mcp.yml + openapi/aircover-openapi.yml
+summary: >-
+  Aircover's published OpenAPI describes the TRANSPORT (one JSON-RPC operation, mcpJsonRpc, plus the OAuth
+  and discovery operations), not the per-tool contract, so no MCP tool binds to a resource-level REST
+  operation. All twelve tools are mcp_only against the public contract. The provider says the full customer
+  REST API exists (the aircover-pipeline CLI calls GET /analytics/, GET /coaching-templates and
+  GET /transcript/coaching) but that surface is customer-only and has no published spec, so it is recorded
+  here as a lead, never as a binding.
+surfaces:
+  openapi:
+    file: openapi/aircover-openapi.yml
+    source: https://www.aircover.ai/openapi.json
+    operations: 7
+    resource_operations: 0
+    note: Operations are transport and OAuth plumbing — mcpJsonRpc, oauthAuthorize, oauthToken, oauthRegisterClient, oauthRevokeToken, getAuthorizationServerMetadata, getProtectedResourceMetadata.
+  graphql: null
+  mcp:
+    endpoint: https://api.aircover.ai/mcp
+    tools_list: auth-gated (401, OAuth bearer required)
+    tools_named: 12
+  customer_rest_api:
+    status: customer-only, unpublished
+    evidence: https://github.com/Aircover/aircover-pipeline (aircover_client.py) calls POST /auth/login, GET /analytics/, GET /coaching-templates, GET /transcript/coaching on https://api.aircover.ai
+    note: No public contract; NOT used as a binding target.
+crosswalk: []
+mcp_only:
+- tool: list_meetings
+  category: meetings
+  reason: No resource-level REST operation in the public contract; the customer-only GET /analytics/ (aircover-pipeline) is the likely backend but is unpublished.
+- tool: get_meeting
+  category: meetings
+  reason: No public REST operation.
+- tool: get_meeting_transcript
+  category: meetings
+  reason: No public REST operation.
+- tool: ask_documents
+  category: documents
+  reason: Server-side retrieval composite over indexed documents; no public REST operation.
+- tool: list_agents
+  category: agents
+  reason: No public REST operation; the customer-only GET /coaching-templates is the likely backend.
+- tool: agent_results
+  category: agents
+  reason: No public REST operation; the customer-only GET /transcript/coaching is the likely backend.
+- tool: get_qualification_results
+  category: deals
+  reason: No public REST operation.
+- tool: get_deals
+  category: deals
+  reason: No public REST operation.
+- tool: get_deal
+  category: deals
+  reason: No public REST operation.
+- tool: get_teams
+  category: teams
+  reason: No public REST operation.
+- tool: list_reports
+  category: reports
+  reason: No public REST operation.
+- tool: read_report
+  category: reports
+  reason: No public REST operation.
+rest_only:
+- capability: transport
+  operations: [mcpJsonRpc]
+  note: The JSON-RPC carrier every tool call travels over.
+- capability: oauth
+  operations: [oauthAuthorize, oauthToken, oauthRegisterClient, oauthRevokeToken]
+- capability: discovery
+  operations: [getAuthorizationServerMetadata, getProtectedResourceMetadata]
+coverage:
+  tools_named: 12
+  tools_bound: 0
+  mcp_only: 12
+  rest_operations_total: 7
+  rest_operations_with_tool: 0

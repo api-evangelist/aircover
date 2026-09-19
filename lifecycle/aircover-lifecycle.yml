@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.aircover.ai/developers + https://www.aircover.ai/terms-and-conditions + openapi/aircover-openapi.yml
+derived_from: openapi/aircover-openapi.yml
+versioning:
+  scheme: unversioned paths; version carried in documents only
+  current_version: 1.0.0
+  spec_url: https://www.aircover.ai/openapi.json
+  base_url: https://api.aircover.ai
+  mcp_server_version: 1.0.0 (well-known/aircover-mcp.json)
+  policy_published: false
+  note: >-
+    /mcp, /oauth/* and /.well-known/* are unversioned. info.version is 1.0.0 and the server.json manifest is
+    1.0.0. No written versioning policy exists on the developer page, in llms.txt or in the terms. The
+    aircover-pipeline CLI is the only versioned surface (semver, changelog/aircover-changelog.yml).
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    Zero of 7 operations carry deprecated: true; no Sunset or Deprecation header is declared. No deprecation
+    policy page exists (/changelog and /release-notes 404). The terms of service reserve the right to change
+    the website "without giving any prior notice" but say nothing about API or MCP tool retirement.
+sla:
+  published: false
+  note: >-
+    The customer terms (last updated June 15, 2025) carry no uptime or availability commitment; section 2
+    disclaims responsibility for "Non-Aircover Services" (Zoom and other third-party APIs) affecting
+    availability. No public SLA page.
+status_page:
+  url: null
+  status: null
+  note: >-
+    No status page found — status.aircover.ai does not resolve (DNS, probed 2026-09-19), www.aircover.ai/status
+    404s, and neither the developer page, llms.txt nor the trust center links one.
+support:
+  portal: https://support.aircover.ai/hc/en-us
+  portal_access: customer-only (every path 302s to /hc/restricted for anonymous visitors)
+  email: support@aircover.ai
+  developer_contact: support@aircover.ai (developer page — REST API and webhook access)

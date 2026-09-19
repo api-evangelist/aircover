@@ -1,0 +1,26 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.aircover.ai/developers + https://github.com/Aircover/aircover-pipeline (aircover_client.py, CHANGELOG.md)
+fetched: '2026-09-19'
+limit_count: 0
+documented: false
+summary: >-
+  Aircover publishes no rate limits for the MCP endpoint, the OAuth endpoints or the customer REST API. The
+  only rate-limit evidence is indirect and provider-authored: the official aircover-pipeline client retries
+  HTTP 429 and 5xx with exponential backoff and "honors Retry-After when present" (CHANGELOG 1.0.1), which
+  tells a consumer the customer API can answer 429 with a Retry-After header, but not the limit, window or
+  scope. The provider's own skills advise narrowing list_meetings windows (200+ meetings "will take a few
+  minutes") and calling get_deal once per deal — capacity guidance, not a published quota.
+limits: []
+response_headers:
+  exhaustion_status: 429
+  headers:
+  - name: Retry-After
+    observed: false
+    source: aircover-pipeline client honors it on 429 (seconds form); not observed live and not declared in the public OpenAPI
+  - name: X-RateLimit-*
+    observed: false
+  - name: RateLimit-*
+    observed: false
+live_probe:
+  note: Anonymous requests to /mcp return 401 before any limit applies; no 429 was observed and no rate-limit headers were present on 401, 400 or 200 discovery responses (2026-09-19).

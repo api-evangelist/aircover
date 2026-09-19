@@ -1,0 +1,70 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/aircover-openapi.yml
+docs: https://www.aircover.ai/developers
+format: mixed — OAuth 2.0 error objects on /oauth/*, JSON-RPC 2.0 error objects inside 200 responses on /mcp; not RFC 9457
+rfc9457: false
+content_types:
+- application/json
+envelopes:
+  oauth:
+    schema: OAuthError
+    fields:
+      error: string (required) — e.g. invalid_grant, invalid_client_metadata
+      error_description: string
+  json_rpc:
+    schema: JsonRpcError
+    fields:
+      code: integer
+      message: string
+      data: any
+    note: Carried inside a 200 JSON-RPC response envelope, not an HTTP error status.
+problem_types:
+- status: 401
+  operation: mcpJsonRpc
+  path: POST /mcp
+  title: Missing or invalid access token
+  body: empty (observed content-length 0)
+  headers:
+    WWW-Authenticate: Bearer resource_metadata="https://api.aircover.ai/.well-known/oauth-protected-resource"
+  remediation: Complete the OAuth flow — fetch the protected-resource metadata, then the authorization-server metadata, register a client, authorize with PKCE, and retry with a Bearer token carrying the mcp scope.
+  observed: '2026-09-19 (live, anonymous POST tools/list and initialize)'
+- status: 400
+  operation: oauthAuthorize
+  path: GET /oauth/authorize
+  title: Invalid authorization request
+  schema: OAuthError
+  remediation: Check client_id, redirect_uri (must match a registered URI), response_type=code, code_challenge and code_challenge_method=S256.
+- status: 400
+  operation: oauthToken
+  path: POST /oauth/token
+  title: Token request rejected
+  schema: OAuthError
+  example_error: invalid_grant
+  remediation: Verify the code has not expired or been used, the code_verifier matches the challenge, and client credentials are sent via client_secret_basic or client_secret_post.
+- status: 400
+  operation: oauthRegisterClient
+  path: POST /oauth/register
+  title: Invalid client metadata
+  schema: OAuthError
+  example_error: invalid_client_metadata
+  example_description: redirect_uris is required
+  remediation: Send a JSON body with client_name, redirect_uris[], grant_types and scope as shown on the developer page.
+  observed: '2026-09-19 (live anonymous POST with {} returned exactly this body)'
+- status: 403
+  operation: null
+  path: GET / (api.aircover.ai root)
+  title: Missing Authentication Token
+  body: '{"message":"Missing Authentication Token"}'
+  note: AWS API Gateway's default response for an unmapped route, not a provider-authored error; unmapped paths return 404 "Not Found".
+  observed: '2026-09-19'
+- status: 429
+  operation: null
+  path: customer REST API (undocumented publicly)
+  title: Rate limited
+  headers:
+    Retry-After: seconds
+  note: Evidenced only by the official aircover-pipeline client, which retries 429 and 5xx with exponential backoff honoring Retry-After. Not declared in the public contract.
+counts:
+  declared_error_responses: 4
+  observed_live: 3
