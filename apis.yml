@@ -31,6 +31,18 @@ tags:
 - CRM
 - Meetings
 - Transcription
+- Authentication
+tags_raw:
+- Sales Enablement
+- Conversation Intelligence
+- Sales Coaching
+- Revenue Intelligence
+- AI Agents
+- MCP
+- agent-native
+- CRM
+- Meetings
+- Transcription
 - OAuth
 apis:
 - aid: aircover:aircover-mcp-server
@@ -81,6 +93,11 @@ apis:
   baseURL: https://api.aircover.ai
   image: https://www.aircover.ai/assets/apple-touch-icon.png
   tags:
+  - Authentication
+  - MCP
+  - Discovery
+  - agent-native
+  tags_raw:
   - OAuth
   - MCP
   - Discovery
