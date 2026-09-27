@@ -27,7 +27,7 @@ tags:
 - Revenue Intelligence
 - AI Agents
 - MCP
-- agent-native
+- Agent-Native
 - CRM
 - Meetings
 - Transcription
@@ -58,6 +58,11 @@ apis:
   image: https://www.aircover.ai/assets/apple-touch-icon.png
   tags:
   - MCP
+  - Agent-Native
+  - Sales Enablement
+  - Conversation Intelligence
+  tags_raw:
+  - MCP
   - agent-native
   - Sales Enablement
   - Conversation Intelligence
@@ -80,33 +85,16 @@ apis:
     url: authentication/aircover-authentication.yml
   - type: OAuthScopes
     url: scopes/aircover-scopes.yml
-- aid: aircover:aircover-public-agent-api
-  name: Aircover Public Agent API
-  description: >-
-    The public, agent-facing API surface of Aircover described by an OpenAPI 3.0.3 contract: the OAuth 2.0
-    authorization server (authorize, token, dynamic client registration, revocation), the RFC 8414 and
-    RFC 9728 discovery documents, and the MCP JSON-RPC endpoint. Seven operations with unique operationIds
-    and typed schemas. The full customer REST API used by the aircover-pipeline CLI (/auth/login,
-    /analytics/, /coaching-templates, /transcript/coaching) is available to customers on request and is
-    not covered by the published contract.
+- aid: aircover:aircover-discovery-api
+  name: Aircover Discovery API
+  description: Machine-readable discovery metadata
   humanURL: https://www.aircover.ai/developers
-  baseURL: https://api.aircover.ai
-  image: https://www.aircover.ai/assets/apple-touch-icon.png
+  baseURL: https://api.aircover.ai/mcp
   tags:
-  - Authentication
-  - MCP
-  - Discovery
-  - agent-native
-  tags_raw:
-  - OAuth
-  - MCP
-  - Discovery
-  - agent-native
+  - discovery
   properties:
   - type: OpenAPI
-    url: openapi/aircover-openapi.yml
-  - type: OpenAPI
-    url: https://www.aircover.ai/openapi.json
+    url: openapi/aircover-discovery-api-openapi.yml
   - type: Documentation
     url: https://www.aircover.ai/developers
   - type: APIReference
@@ -119,8 +107,58 @@ apis:
     url: conventions/aircover-conventions.yml
   - type: ErrorCatalog
     url: errors/aircover-problem-types.yml
-  - type: Overlay
-    url: overlays/aircover-openapi-overlay.yaml
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-meetings-1.0.json
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-agent-output-1.0.json
+- aid: aircover:aircover-mcp-api
+  name: Aircover MCP API
+  description: Model Context Protocol server (Streamable HTTP transport)
+  humanURL: https://www.aircover.ai/developers
+  baseURL: https://api.aircover.ai/mcp
+  tags:
+  - mcp
+  properties:
+  - type: OpenAPI
+    url: openapi/aircover-mcp-api-openapi.yml
+  - type: Documentation
+    url: https://www.aircover.ai/developers
+  - type: APIReference
+    url: https://www.aircover.ai/developers
+  - type: Authentication
+    url: authentication/aircover-authentication.yml
+  - type: OAuthScopes
+    url: scopes/aircover-scopes.yml
+  - type: Conventions
+    url: conventions/aircover-conventions.yml
+  - type: ErrorCatalog
+    url: errors/aircover-problem-types.yml
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-meetings-1.0.json
+  - type: JSONSchema
+    url: json-schema/aircover-pipeline-agent-output-1.0.json
+- aid: aircover:aircover-oauth-api
+  name: Aircover OAuth API
+  description: OAuth 2.0 authorization server (authorization code + PKCE, dynamic client registration)
+  humanURL: https://www.aircover.ai/developers
+  baseURL: https://api.aircover.ai/mcp
+  tags:
+  - oauth
+  properties:
+  - type: OpenAPI
+    url: openapi/aircover-oauth-api-openapi.yml
+  - type: Documentation
+    url: https://www.aircover.ai/developers
+  - type: APIReference
+    url: https://www.aircover.ai/developers
+  - type: Authentication
+    url: authentication/aircover-authentication.yml
+  - type: OAuthScopes
+    url: scopes/aircover-scopes.yml
+  - type: Conventions
+    url: conventions/aircover-conventions.yml
+  - type: ErrorCatalog
+    url: errors/aircover-problem-types.yml
   - type: JSONSchema
     url: json-schema/aircover-pipeline-meetings-1.0.json
   - type: JSONSchema

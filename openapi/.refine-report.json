@@ -1,0 +1,27 @@
+{
+  "provider": "aircover",
+  "sources": [
+    "_original/aircover-openapi.json",
+    "aircover-openapi.yml"
+  ],
+  "outputs": [
+    "aircover-discovery-api-openapi.yml",
+    "aircover-mcp-api-openapi.yml",
+    "aircover-oauth-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/aircover-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "aircover-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "aircover-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "tag 'discovery' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
+    "tag 'mcp' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
+    "tag 'oauth' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
+    "apis.yml register: written (+3 apis, 4 total)"
+  ],
+  "skipped": []
+}

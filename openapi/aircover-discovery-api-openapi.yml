@@ -1,0 +1,135 @@
+openapi: 3.2.0
+info:
+  title: Aircover Discovery API
+  version: 1.0.0
+  contact:
+    name: Aircover Support
+    email: support@aircover.ai
+    url: https://www.aircover.ai/developers
+  termsOfService: https://www.aircover.ai/terms-and-conditions
+  description: 'Operations tagged discovery across 2 of this provider''s published API definitions: aircover-openapi.json, aircover-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.aircover.ai
+  description: Production
+security:
+- oauth2:
+  - mcp
+tags:
+- name: Discovery
+  description: Machine-readable discovery metadata
+paths:
+  /.well-known/oauth-authorization-server:
+    get:
+      operationId: getAuthorizationServerMetadata
+      tags:
+      - Discovery
+      summary: Authorization server metadata (RFC 8414)
+      description: 'Machine-readable OAuth 2.0 authorization server metadata: endpoints, supported scopes, grant types, and PKCE methods. Also reachable via redirect from www.aircover.ai/.well-known/oauth-authorization-server.'
+      security: []
+      responses:
+        '200':
+          description: Authorization server metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationServerMetadata'
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+  /.well-known/oauth-protected-resource:
+    get:
+      operationId: getProtectedResourceMetadata
+      tags:
+      - Discovery
+      summary: Protected resource metadata (RFC 9728)
+      description: Identifies the MCP endpoint as an OAuth 2.0 protected resource and names its authorization server.
+      security: []
+      responses:
+        '200':
+          description: Protected resource metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtectedResourceMetadata'
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+components:
+  schemas:
+    ProtectedResourceMetadata:
+      type: object
+      required:
+      - resource
+      - authorization_servers
+      properties:
+        resource:
+          type: string
+          format: uri
+          example: https://api.aircover.ai/mcp
+        authorization_servers:
+          type: array
+          items:
+            type: string
+            format: uri
+    AuthorizationServerMetadata:
+      type: object
+      required:
+      - issuer
+      - authorization_endpoint
+      - token_endpoint
+      properties:
+        issuer:
+          type: string
+          format: uri
+          example: https://api.aircover.ai
+        authorization_endpoint:
+          type: string
+          format: uri
+        token_endpoint:
+          type: string
+          format: uri
+        registration_endpoint:
+          type: string
+          format: uri
+        revocation_endpoint:
+          type: string
+          format: uri
+        scopes_supported:
+          type: array
+          items:
+            type: string
+          example:
+          - mcp
+        response_types_supported:
+          type: array
+          items:
+            type: string
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+        code_challenge_methods_supported:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 authorization code flow with PKCE (S256) and dynamic client registration. Scopes are granted per-client and always bounded by the authenticated user's own organization permissions — an agent can never see more than the user who authorized it.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.aircover.ai/oauth/authorize
+          tokenUrl: https://api.aircover.ai/oauth/token
+          refreshUrl: https://api.aircover.ai/oauth/token
+          scopes:
+            mcp: 'Access the MCP tool surface: meetings, transcripts, AI agent results, deal qualification, reports, teams, and indexed documents — read-scoped to the authorizing user''s organization role.'
+externalDocs:
+  description: Aircover Developer & Agent Resources
+  url: https://www.aircover.ai/developers
+x-refined-from:
+- aircover-openapi.json
+- aircover-openapi.yml

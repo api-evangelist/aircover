@@ -1,0 +1,318 @@
+openapi: 3.2.0
+info:
+  title: Aircover OAuth API
+  version: 1.0.0
+  contact:
+    name: Aircover Support
+    email: support@aircover.ai
+    url: https://www.aircover.ai/developers
+  termsOfService: https://www.aircover.ai/terms-and-conditions
+  description: 'Operations tagged oauth across 2 of this provider''s published API definitions: aircover-openapi.json, aircover-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.aircover.ai
+  description: Production
+security:
+- oauth2:
+  - mcp
+tags:
+- name: OAuth
+  description: OAuth 2.0 authorization server (authorization code + PKCE, dynamic client registration)
+paths:
+  /oauth/authorize:
+    get:
+      operationId: oauthAuthorize
+      tags:
+      - OAuth
+      summary: OAuth 2.0 authorization endpoint
+      description: Begin the authorization code flow. PKCE (S256) is required. The user signs in with their Aircover account (Google, Microsoft, or enterprise OIDC SSO) and consents to the requested scopes, then is redirected to redirect_uri with an authorization code.
+      security: []
+      parameters:
+      - name: response_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - code
+        description: Must be 'code'.
+      - name: client_id
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Client identifier from dynamic client registration.
+      - name: redirect_uri
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uri
+        description: Registered redirect URI.
+      - name: scope
+        in: query
+        required: false
+        schema:
+          type: string
+          example: mcp
+        description: Space-separated scopes. See the 'oauth2' security scheme for available scopes.
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Opaque value echoed back on redirect for CSRF protection.
+      - name: code_challenge
+        in: query
+        required: true
+        schema:
+          type: string
+        description: PKCE code challenge.
+      - name: code_challenge_method
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - S256
+        description: PKCE challenge method; only S256 is supported.
+      responses:
+        '302':
+          description: Redirect to the sign-in flow, then back to redirect_uri with ?code=…&state=… on success or ?error=… on failure.
+        '400':
+          description: Invalid request (unknown client_id, bad redirect_uri, missing PKCE).
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+  /oauth/token:
+    post:
+      operationId: oauthToken
+      tags:
+      - OAuth
+      summary: OAuth 2.0 token endpoint
+      description: Exchange an authorization code (with PKCE code_verifier) for an access token, or refresh an access token. Client authentication via client_secret_basic or client_secret_post.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: OAuth 2.0 error response (invalid_grant, invalid_client, …)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+  /oauth/register:
+    post:
+      operationId: oauthRegisterClient
+      tags:
+      - OAuth
+      summary: Dynamic client registration (RFC 7591)
+      description: Register an OAuth client programmatically — no manual key issuance. MCP clients use this to onboard without human intervention beyond user consent.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRegistrationRequest'
+      responses:
+        '201':
+          description: Client registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistrationResponse'
+        '400':
+          description: Invalid client metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+  /oauth/revoke:
+    post:
+      operationId: oauthRevokeToken
+      tags:
+      - OAuth
+      summary: Token revocation (RFC 7009)
+      description: Revoke an access or refresh token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  type: string
+                  description: The token to revoke.
+                token_type_hint:
+                  type: string
+                  enum:
+                  - access_token
+                  - refresh_token
+                  description: Optional hint about the token type.
+      responses:
+        '200':
+          description: Token revoked (or was already invalid).
+    servers:
+    - url: https://api.aircover.ai
+      description: Production
+components:
+  schemas:
+    ClientRegistrationResponse:
+      type: object
+      required:
+      - client_id
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+          description: Returned once at registration; store securely.
+        client_name:
+          type: string
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+        grant_types:
+          type: array
+          items:
+            type: string
+        response_types:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_method:
+          type: string
+        scope:
+          type: string
+    TokenResponse:
+      type: object
+      required:
+      - access_token
+      - token_type
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Access token lifetime in seconds.
+        refresh_token:
+          type: string
+        scope:
+          type: string
+          example: mcp
+    ClientRegistrationRequest:
+      type: object
+      required:
+      - redirect_uris
+      properties:
+        client_name:
+          type: string
+          description: Human-readable client name shown on the consent screen.
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+          minItems: 1
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - authorization_code
+            - refresh_token
+        response_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - code
+        token_endpoint_auth_method:
+          type: string
+          enum:
+          - client_secret_basic
+          - client_secret_post
+        scope:
+          type: string
+          example: mcp
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          example: invalid_grant
+        error_description:
+          type: string
+    TokenRequest:
+      type: object
+      required:
+      - grant_type
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - refresh_token
+        code:
+          type: string
+          description: Authorization code (grant_type=authorization_code).
+        redirect_uri:
+          type: string
+          format: uri
+          description: Must match the authorization request.
+        code_verifier:
+          type: string
+          description: PKCE code verifier.
+        refresh_token:
+          type: string
+          description: Refresh token (grant_type=refresh_token).
+        client_id:
+          type: string
+          description: Required with client_secret_post authentication.
+        client_secret:
+          type: string
+          description: Required with client_secret_post authentication.
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 authorization code flow with PKCE (S256) and dynamic client registration. Scopes are granted per-client and always bounded by the authenticated user's own organization permissions — an agent can never see more than the user who authorized it.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.aircover.ai/oauth/authorize
+          tokenUrl: https://api.aircover.ai/oauth/token
+          refreshUrl: https://api.aircover.ai/oauth/token
+          scopes:
+            mcp: 'Access the MCP tool surface: meetings, transcripts, AI agent results, deal qualification, reports, teams, and indexed documents — read-scoped to the authorizing user''s organization role.'
+externalDocs:
+  description: Aircover Developer & Agent Resources
+  url: https://www.aircover.ai/developers
+x-refined-from:
+- aircover-openapi.json
+- aircover-openapi.yml
