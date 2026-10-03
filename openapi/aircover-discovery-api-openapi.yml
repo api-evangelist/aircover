@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Aircover Discovery API
+  title: Aircover Public Agent Discovery API
   version: 1.0.0
+  description: The public, agent-facing API surface of Aircover — the AI-powered real-time sales coaching and enablement platform. This specification covers the OAuth 2.0 authorization endpoints and the Model Context Protocol (MCP) endpoint that AI agents use to access Aircover on behalf of an authenticated user. Aircover's full REST API is available to customers; contact support@aircover.ai for access. New users receive a trial license automatically on self-serve sign-up.
   contact:
     name: Aircover Support
     email: support@aircover.ai
     url: https://www.aircover.ai/developers
   termsOfService: https://www.aircover.ai/terms-and-conditions
-  description: 'Operations tagged discovery across 2 of this provider''s published API definitions: aircover-openapi.json, aircover-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.aircover.ai
   description: Production
@@ -33,9 +33,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthorizationServerMetadata'
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
   /.well-known/oauth-protected-resource:
     get:
       operationId: getProtectedResourceMetadata
@@ -51,26 +48,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProtectedResourceMetadata'
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
 components:
   schemas:
-    ProtectedResourceMetadata:
-      type: object
-      required:
-      - resource
-      - authorization_servers
-      properties:
-        resource:
-          type: string
-          format: uri
-          example: https://api.aircover.ai/mcp
-        authorization_servers:
-          type: array
-          items:
-            type: string
-            format: uri
     AuthorizationServerMetadata:
       type: object
       required:
@@ -116,6 +95,21 @@ components:
           type: array
           items:
             type: string
+    ProtectedResourceMetadata:
+      type: object
+      required:
+      - resource
+      - authorization_servers
+      properties:
+        resource:
+          type: string
+          format: uri
+          example: https://api.aircover.ai/mcp
+        authorization_servers:
+          type: array
+          items:
+            type: string
+            format: uri
   securitySchemes:
     oauth2:
       type: oauth2
@@ -130,6 +124,3 @@ components:
 externalDocs:
   description: Aircover Developer & Agent Resources
   url: https://www.aircover.ai/developers
-x-refined-from:
-- aircover-openapi.json
-- aircover-openapi.yml

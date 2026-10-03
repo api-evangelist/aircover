@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Aircover OAuth API
+  title: Aircover Public Agent OAuth API
   version: 1.0.0
+  description: The public, agent-facing API surface of Aircover — the AI-powered real-time sales coaching and enablement platform. This specification covers the OAuth 2.0 authorization endpoints and the Model Context Protocol (MCP) endpoint that AI agents use to access Aircover on behalf of an authenticated user. Aircover's full REST API is available to customers; contact support@aircover.ai for access. New users receive a trial license automatically on self-serve sign-up.
   contact:
     name: Aircover Support
     email: support@aircover.ai
     url: https://www.aircover.ai/developers
   termsOfService: https://www.aircover.ai/terms-and-conditions
-  description: 'Operations tagged oauth across 2 of this provider''s published API definitions: aircover-openapi.json, aircover-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.aircover.ai
   description: Production
@@ -80,9 +80,6 @@ paths:
           description: Redirect to the sign-in flow, then back to redirect_uri with ?code=…&state=… on success or ?error=… on failure.
         '400':
           description: Invalid request (unknown client_id, bad redirect_uri, missing PKCE).
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
   /oauth/token:
     post:
       operationId: oauthToken
@@ -110,9 +107,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OAuthError'
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
   /oauth/register:
     post:
       operationId: oauthRegisterClient
@@ -140,9 +134,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OAuthError'
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
   /oauth/revoke:
     post:
       operationId: oauthRevokeToken
@@ -172,9 +163,6 @@ paths:
       responses:
         '200':
           description: Token revoked (or was already invalid).
-    servers:
-    - url: https://api.aircover.ai
-      description: Production
 components:
   schemas:
     ClientRegistrationResponse:
@@ -225,6 +213,45 @@ components:
         scope:
           type: string
           example: mcp
+    TokenRequest:
+      type: object
+      required:
+      - grant_type
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - refresh_token
+        code:
+          type: string
+          description: Authorization code (grant_type=authorization_code).
+        redirect_uri:
+          type: string
+          format: uri
+          description: Must match the authorization request.
+        code_verifier:
+          type: string
+          description: PKCE code verifier.
+        refresh_token:
+          type: string
+          description: Refresh token (grant_type=refresh_token).
+        client_id:
+          type: string
+          description: Required with client_secret_post authentication.
+        client_secret:
+          type: string
+          description: Required with client_secret_post authentication.
+    OAuthError:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          example: invalid_grant
+        error_description:
+          type: string
     ClientRegistrationRequest:
       type: object
       required:
@@ -260,45 +287,6 @@ components:
         scope:
           type: string
           example: mcp
-    OAuthError:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          example: invalid_grant
-        error_description:
-          type: string
-    TokenRequest:
-      type: object
-      required:
-      - grant_type
-      properties:
-        grant_type:
-          type: string
-          enum:
-          - authorization_code
-          - refresh_token
-        code:
-          type: string
-          description: Authorization code (grant_type=authorization_code).
-        redirect_uri:
-          type: string
-          format: uri
-          description: Must match the authorization request.
-        code_verifier:
-          type: string
-          description: PKCE code verifier.
-        refresh_token:
-          type: string
-          description: Refresh token (grant_type=refresh_token).
-        client_id:
-          type: string
-          description: Required with client_secret_post authentication.
-        client_secret:
-          type: string
-          description: Required with client_secret_post authentication.
   securitySchemes:
     oauth2:
       type: oauth2
@@ -313,6 +301,3 @@ components:
 externalDocs:
   description: Aircover Developer & Agent Resources
   url: https://www.aircover.ai/developers
-x-refined-from:
-- aircover-openapi.json
-- aircover-openapi.yml

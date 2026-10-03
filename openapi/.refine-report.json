@@ -1,27 +1,26 @@
 {
   "provider": "aircover",
   "sources": [
-    "_original/aircover-openapi.json",
-    "aircover-openapi.yml"
+    "_original/aircover-openapi.json"
   ],
   "outputs": [
     "aircover-discovery-api-openapi.yml",
     "aircover-mcp-api-openapi.yml",
     "aircover-oauth-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/aircover-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "aircover-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "aircover-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "tag 'discovery' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
-    "tag 'mcp' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
-    "tag 'oauth' spans 2 source specs (aircover-openapi.json, aircover-openapi.yml): per-path servers applied",
-    "apis.yml register: written (+3 apis, 4 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "_original/aircover-openapi.yml: archived document superseded by a larger archived document",
+    "aircover-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "aircover-mcp-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "aircover-oauth-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
