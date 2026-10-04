@@ -194,22 +194,38 @@ components:
           type: string
         scope:
           type: string
-    TokenResponse:
+    ClientRegistrationRequest:
       type: object
       required:
-      - access_token
-      - token_type
+      - redirect_uris
       properties:
-        access_token:
+        client_name:
           type: string
-        token_type:
+          description: Human-readable client name shown on the consent screen.
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+          minItems: 1
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - authorization_code
+            - refresh_token
+        response_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - code
+        token_endpoint_auth_method:
           type: string
-          example: Bearer
-        expires_in:
-          type: integer
-          description: Access token lifetime in seconds.
-        refresh_token:
-          type: string
+          enum:
+          - client_secret_basic
+          - client_secret_post
         scope:
           type: string
           example: mcp
@@ -252,38 +268,22 @@ components:
           example: invalid_grant
         error_description:
           type: string
-    ClientRegistrationRequest:
+    TokenResponse:
       type: object
       required:
-      - redirect_uris
+      - access_token
+      - token_type
       properties:
-        client_name:
+        access_token:
           type: string
-          description: Human-readable client name shown on the consent screen.
-        redirect_uris:
-          type: array
-          items:
-            type: string
-            format: uri
-          minItems: 1
-        grant_types:
-          type: array
-          items:
-            type: string
-            enum:
-            - authorization_code
-            - refresh_token
-        response_types:
-          type: array
-          items:
-            type: string
-            enum:
-            - code
-        token_endpoint_auth_method:
+        token_type:
           type: string
-          enum:
-          - client_secret_basic
-          - client_secret_post
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Access token lifetime in seconds.
+        refresh_token:
+          type: string
         scope:
           type: string
           example: mcp

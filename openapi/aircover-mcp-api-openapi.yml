@@ -45,6 +45,19 @@ paths:
           description: Missing or invalid access token. The WWW-Authenticate header references the protected resource metadata at /.well-known/oauth-protected-resource.
 components:
   schemas:
+    JsonRpcError:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          description: JSON-RPC error code.
+        message:
+          type: string
+        data:
+          description: Optional error details.
     JsonRpcRequest:
       type: object
       required:
@@ -68,19 +81,6 @@ components:
           type: object
           description: 'Method parameters. For tools/call: {"name": "list_meetings", "arguments": {…}}.'
           additionalProperties: true
-    JsonRpcError:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          description: JSON-RPC error code.
-        message:
-          type: string
-        data:
-          description: Optional error details.
     JsonRpcResponse:
       type: object
       required:

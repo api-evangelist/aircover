@@ -50,6 +50,21 @@ paths:
                 $ref: '#/components/schemas/ProtectedResourceMetadata'
 components:
   schemas:
+    ProtectedResourceMetadata:
+      type: object
+      required:
+      - resource
+      - authorization_servers
+      properties:
+        resource:
+          type: string
+          format: uri
+          example: https://api.aircover.ai/mcp
+        authorization_servers:
+          type: array
+          items:
+            type: string
+            format: uri
     AuthorizationServerMetadata:
       type: object
       required:
@@ -95,21 +110,6 @@ components:
           type: array
           items:
             type: string
-    ProtectedResourceMetadata:
-      type: object
-      required:
-      - resource
-      - authorization_servers
-      properties:
-        resource:
-          type: string
-          format: uri
-          example: https://api.aircover.ai/mcp
-        authorization_servers:
-          type: array
-          items:
-            type: string
-            format: uri
   securitySchemes:
     oauth2:
       type: oauth2
