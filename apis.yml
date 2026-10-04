@@ -91,6 +91,8 @@ apis:
   humanURL: https://www.aircover.ai/developers
   baseURL: https://api.aircover.ai/mcp
   tags:
+  - Discovery
+  tags_raw:
   - discovery
   properties:
   - type: OpenAPI
@@ -117,6 +119,8 @@ apis:
   humanURL: https://www.aircover.ai/developers
   baseURL: https://api.aircover.ai/mcp
   tags:
+  - MCP
+  tags_raw:
   - mcp
   properties:
   - type: OpenAPI
@@ -143,6 +147,8 @@ apis:
   humanURL: https://www.aircover.ai/developers
   baseURL: https://api.aircover.ai/mcp
   tags:
+  - Authentication
+  tags_raw:
   - oauth
   properties:
   - type: OpenAPI
