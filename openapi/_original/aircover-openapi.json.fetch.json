@@ -1,0 +1,12 @@
+{
+ "url": "https://www.aircover.ai/openapi.json",
+ "requested_url": "https://www.aircover.ai/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 16478,
+ "sha256": "f14ec7fa9bee33a489aa0027abd032fd6146a1aa50921b2849d7700abdb463c7",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
