@@ -6,9 +6,16 @@ source:
 - https://composio.dev/toolkits/aircover
 - https://monid.ai/tools/aircover
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/aircover
+- https://crates.io/api/v1
 - https://monid.ai/tools/aircover
 - https://n8n.io/integrations/aircover/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/apps/aircover/integrations
 - zoom/integrations/zoom-integration-edges.yml
 summary: null
@@ -31,4 +38,34 @@ edges:
   detected: '2026-10-18'
   detected_by: mirror-platform-listings.py
   category: Zoom app
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/aircover-pipeline/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: aircover-pipeline
+      version: 1.0.3
+      released: '2026-06-01'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/aircover-pipeline/
+      repo_leg: github-org:aircover
+      publisher_leg: email:aircover.ai
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
