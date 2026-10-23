@@ -27,6 +27,12 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/aircover-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
   json-schema/aircover-pipeline-agent-output-1.0.json:
     method: unknown
     evidence: no authorship recorded
@@ -39,7 +45,7 @@ artifacts:
   json-schema/aircover-pipeline-summary-1.0.json:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-19T193153.yml:
@@ -72,6 +78,21 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/aircover-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -89,14 +110,23 @@ artifacts:
     evidence: declared in the artifact
   openapi/_original/aircover-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/aircover-openapi.yml:
+    evidence: byte-identical to https://www.aircover.ai/openapi.json (sha256 f14ec7fa9bee, fetched 2026-10-04)
+  openapi/_original/aircover-openapi.yml:
+    method: harvested
+    evidence: the same operations as https://www.aircover.ai/openapi.json (sha256 f14ec7fa9bee, fetched
+      2026-10-04)
+  openapi/aircover-discovery-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/aircover-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/aircover-oauth-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   overlays/aircover-openapi-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
   packages/aircover-packages.yml:
     method: searched
     evidence: declared in the artifact
