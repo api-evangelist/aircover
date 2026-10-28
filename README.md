@@ -64,25 +64,143 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aircover is an AI-native revenue agent platform for sales teams. Specialist AI agents work before, during
-and after every customer conversation — joining Zoom, Microsoft Teams, Google Meet and Webex calls to surface
-real-time coaching, objection handling, battlecards and technical answers from live transcription (no recording
-by default), then generating notes, follow-ups, MEDDPICC-style qualification scoring and CRM updates into
-Salesforce, HubSpot and ServiceNow.
+Aircover is an AI-native revenue agent platform for sales teams: specialist AI agents work before, during and after every customer conversation, joining Zoom, Microsoft Teams, Google Meet and Webex calls to surface real-time coaching, objection handling, battlecards and technical answers from live transcription (no recording by default), then generating notes, follow-ups, MEDDPICC-style qualification scoring and CRM updates into Salesforce, HubSpot and ServiceNow. For developers and agents the company publishes a remote Model Context Protocol server at https://api.aircover.ai/mcp (Streamable HTTP, OAuth 2.0 with PKCE and RFC 7591 dynamic client registration, twelve read tools over meetings, transcripts, agent results, deals, teams, reports and documents), an OpenAPI 3.0.3 contract for the public agent API, an MCP registry server.json manifest, llms.txt, markdown content negotiation on every page, four open-source Claude/ChatGPT Skills and a PyPI-published Python pipeline CLI. The full customer REST API and webhooks are customer-only.
 
-For developers and agents, Aircover publishes:
+**Areas:** Sales Enablement · Conversation Intelligence · Sales Coaching · Revenue Intelligence · AI Agents · MCP · Agent-Native · CRM · Meetings · Transcription · Authentication
 
-- **MCP server** — a remote Model Context Protocol server at `https://api.aircover.ai/mcp` (Streamable HTTP,
-  OAuth 2.0 with PKCE and RFC 7591 dynamic client registration), with twelve read tools over meetings,
-  transcripts, agent results, deals, teams, reports and indexed documents.
-- **OpenAPI 3.0.3** — <https://www.aircover.ai/openapi.json>, covering the OAuth endpoints, the discovery
-  documents and the MCP JSON-RPC endpoint.
-- **Discovery** — RFC 8414 and RFC 9728 metadata on `api.aircover.ai`, an MCP registry `server.json` at
-  `/.well-known/mcp.json`, `llms.txt`, and markdown content negotiation on every page.
-- **Open source** — four packaged Agent Skills ([aircover-skills](https://github.com/Aircover/aircover-skills))
-  and a Python pipeline CLI ([aircover-pipeline](https://github.com/Aircover/aircover-pipeline), PyPI).
+## Aircover on APIs.io
 
-The full customer REST API and webhooks are available to customers on request and are not publicly documented.
+Everything profiled for Aircover is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/aircover/](https://apis.io/providers/aircover/)** — or go straight to one of the APIs or properties below.
 
-- <https://www.aircover.ai/>
-- <https://www.aircover.ai/developers>
+### APIs (4)
+
+- [Aircover MCP Server](https://apis.io/apis/aircover/aircover-mcp-server/) — Remote Model Context Protocol server over Streamable HTTP at https://api.aircover.ai/mcp. An authenticated Aircover user's agent can list and read meetings…
+- [Aircover Discovery API](https://apis.io/apis/aircover/aircover-discovery-api/) — Machine-readable discovery metadata
+- [Aircover MCP API](https://apis.io/apis/aircover/aircover-mcp-api/) — Model Context Protocol server (Streamable HTTP transport)
+- [Aircover OAuth API](https://apis.io/apis/aircover/aircover-oauth-api/) — OAuth 2.0 authorization server (authorization code + PKCE, dynamic client registration)
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (3)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [ai.aircover/mcp](https://apis.io/servers/aircover/ai-aircover-mcp/)
+- [aircover-mcp.yml](https://apis.io/servers/aircover/aircover-mcp-yml/)
+- [mcp.json](https://apis.io/servers/aircover/mcp-json/)
+
+#### JSON Schema (4)
+
+The data models the API reads and writes.
+
+- [Aircover Pipeline — agent-outputs/agent_<meeting_id>.json (v1.0)](https://apis.io/schemas/aircover/aircover-pipeline-agent-output-1.0/)
+- [Aircover Pipeline — failures.json (v1.0)](https://apis.io/schemas/aircover/aircover-pipeline-failures-1.0/)
+- [Aircover Pipeline — meetings.json (v1.0)](https://apis.io/schemas/aircover/aircover-pipeline-meetings-1.0/)
+- [Aircover Pipeline — summary.json (v1.0)](https://apis.io/schemas/aircover/aircover-pipeline-summary-1.0/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Aircover Openapi Overlay](https://apis.io/overlays/aircover/aircover-openapi-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Aircover Authentication](https://apis.io/security/aircover/aircover-authentication/)
+- [Aircover Domain Security](https://apis.io/security/aircover/aircover-domain-security/)
+- [Aircover Trust Center](https://apis.io/security/aircover/aircover-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Aircover Scopes](https://apis.io/scopes/aircover/aircover-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Aircover Plans Pricing](https://apis.io/plans/aircover/aircover-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Aircover Rate Limits](https://apis.io/rate-limits/aircover/aircover-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.aircover.ai/)
+- [Documentation](https://www.aircover.ai/developers)
+- [Getting started](https://www.aircover.ai/developers)
+- [API reference](https://www.aircover.ai/developers)
+- [Pricing](https://www.aircover.ai/pricing)
+- [Support](https://www.aircover.ai/contact-us)
+- [Changelog](https://github.com/Aircover/aircover-pipeline/blob/main/CHANGELOG.md)
+- [Blog](https://www.aircover.ai/blog)
+- [Compliance](https://www.aircover.ai/trust-center)
+- [Trust centre](https://www.aircover.ai/trust-center)
+- [Terms of service](https://www.aircover.ai/terms-and-conditions)
+- [Privacy policy](https://www.aircover.ai/privacy-policy)
+- [GitHub](https://github.com/Aircover)
+
+## API Evangelist rating
+
+**Kin Score 55.8** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 55.1 |
+| Contract governance | 18.2 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 78.6 |
+| Access clarity | 53.9 |
+
+**Agent readiness 48.1** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 43.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/aircover/](https://apis.io/providers/aircover/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Aircover: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/aircover/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
